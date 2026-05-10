@@ -280,82 +280,95 @@ body {
            3. 首頁輪播區 (Hero Slider)
            ========================================================================== */
 /* --- 整合優化與原本樣式的 Hero Slider --- */
+/* --- 整合優化後的 Hero Slider (固定比例版) --- */
 .hero {
     position: relative;
-    min-height: 100vh; 
-    padding-top: 100px; 
+    /* 取消 min-height: 100vh 以免強制拉長，改由內容比例決定高度 */
     background-color: #0a0a0a;
-    max-width: 100%; 
-    overflow: hidden; 
+    max-width: 100%;
+    overflow: hidden;
+    /* 確保導覽列預留空間 */
+    padding-top: 100px; 
 }
 
 .slider-container {
-    position: absolute;
-    top: 100px;
-    left: 0;
+    position: relative; /* 改為 relative 讓比例容器撐開高度 */
     width: 100%;
-    height: calc(100% - 100px); 
+    /* 設定電腦/橫向比例為 16:9 */
+    aspect-ratio: 16 / 9;
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: #000;
 }
 
-/* 預載層：確保 Netlify 部署後不再閃爍 */
+/* 針對手機直向切換比例為 2:3 */
+@media (max-width: 768px) {
+    .slider-container {
+        aspect-ratio: 2 / 3;
+        /* 避免在極長的手機螢幕上圖片過高，可限制最大高度 */
+        max-height: 75vh; 
+    }
+    .hero {
+        padding-top: 80px; /* 手機版導覽列通常較矮 */
+    }
+}
+
 .slide-layer {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-size: contain;
-    background-position: center center;
+    /* 改用 background-size: cover 確保滿版不留黑邊 */
+    background-size: cover;
+    /* 關鍵：設定為 top center 確保師傅臉部（上方）優先顯示 */
+    background-position: top center;
     background-repeat: no-repeat;
     opacity: 0;
-    transition: opacity 0.8s ease-in-out; 
+    transition: opacity 0.8s ease-in-out;
     z-index: 1;
 }
 
-/* 目前顯示的圖片 */
 .slide-layer.active {
     opacity: 1;
     z-index: 2;
 }
 
-/* 保留你原本漂亮的箭頭樣式 */
+/* 箭頭樣式保持不變，但確保 z-index 足夠 */
 .prev-arrow, .next-arrow {
     cursor: pointer;
     position: absolute;
     top: 50%;
     width: auto;
     padding: 16px;
-    margin-top: -22px; 
+    margin-top: -22px;
     color: #d4af37;
     font-weight: bold;
-    font-size: 2rem; 
-    transform: scaleY(3); /* 保留原本長長的箭頭風格 */
+    font-size: 2rem;
+    transform: scaleY(3); 
     transition: 0.6s ease;
     text-decoration: none;
-    z-index: 10; 
-    user-select: none; 
-    -webkit-user-select: none; 
+    z-index: 15; /* 提升層級避免被圖片遮擋 */
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .prev-arrow { left: 0; }
 .next-arrow { right: 0; }
 .prev-arrow:hover, .next-arrow:hover { color: white; }
 
-/* 保留你原本的底框樣式 */
+/* 底框樣式保持 */
 .hero-bottom-frame {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 60px; 
-    background-color: #050505; 
-    border-top: 4px solid #d4af37; 
+    height: 40px; /* 稍微縮小高度以配合比例 */
+    background-color: #050505;
+    border-top: 4px solid #d4af37;
     z-index: 10;
 }
-
         /* ==========================================================================
            4. 全局排版與內文區塊 (Typography & Layout)
            ========================================================================== */
