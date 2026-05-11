@@ -15,7 +15,9 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://sevenmystic.tw/webdoor.jpg"> 
 
-    <link rel="icon" type="image/png" href="favicon.jpg">
+  <link rel="icon" type="image/png" sizes="192x192" href="favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     
     <style>
     /* ... 下面是您原本的 CSS 樣式，完全不用動 ... */
@@ -1142,10 +1144,12 @@ body {
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
 /* 🌟 終極鎖定背景滾動 (專治 iOS 穿透) */
+/* 🌟 終極 iOS 鎖定：改用 fixed 與 100% 防止網址列縫隙 */
 html.no-scroll, body.no-scroll { 
     overflow: hidden !important; 
-    height: 100vh !important; /* 🌟 加上強制高度，讓網頁無底可滑 */
-    touch-action: none !important; 
+    height: 100% !important; /* 不用 vh，避免 Safari 網址列縮放產生縫隙 */
+    position: fixed !important; /* 直接把背景釘死 */
+    width: 100% !important;
 }
 
 @media (max-width: 768px) {
@@ -1166,12 +1170,10 @@ html.no-scroll, body.no-scroll {
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
-@media (max-width: 768px) {
     .nav-links.active { 
         right: 0; 
         overscroll-behavior: none; /* 🌟 新增：防止滾動穿透到底層 */
     }
-}
 
     .dropdown-menu {
         position: relative;
@@ -1477,19 +1479,7 @@ html.no-scroll, body.no-scroll {
 .all-label { font-weight: bold; color: #fff; }
 
 
-/* --- 牌品專區 終極修正版：消除白色空白 + 按鈕加大 --- */
-/* --- 刪除這整段 --- */
-.gallery-tabs {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: flex-start !important;
-    gap: 35px !important;
-    padding: 25px 30px !important;
-    background: rgba(10, 10, 10, 0.98) !important;
-    border-bottom: 2px solid #d4af37 !important;
-    flex-wrap: nowrap !important;
-    margin-bottom: 25px;
-}
+
 
 /* 核心：徹底強制殺掉所有原生 checkbox 的白色方塊 */
 .gallery-tabs input[type="checkbox"] {
@@ -4320,11 +4310,27 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
        1. 基礎功能 (導覽列、彈窗)
        ========================================================================== */
    /* 將原本的 toggleMenu 換成這段： */
+let scrollPosition = 0; // 🌟 務必補上這行宣告變數
+
 function toggleMenu() {
     const navLinks = document.getElementById('navLinks');
-    navLinks.classList.toggle('active');
-    document.body.classList.toggle('no-scroll');
-    document.documentElement.classList.toggle('no-scroll'); // 🌟 新增這行，對底層雙重上鎖
+    const isActive = navLinks.classList.contains('active');
+
+    if (!isActive) {
+        // 【打開選單】記錄位置，並把 body 釘在該高度
+        scrollPosition = window.scrollY;
+        document.body.style.top = `-${scrollPosition}px`;
+        document.body.classList.add('no-scroll');
+        document.documentElement.classList.add('no-scroll');
+        navLinks.classList.add('active');
+    } else {
+        // 【關閉選單】解除釘死，並跳回原本的捲動位置
+        document.body.classList.remove('no-scroll');
+        document.documentElement.classList.remove('no-scroll');
+        document.body.style.top = '';
+        window.scrollTo(0, scrollPosition);
+        navLinks.classList.remove('active');
+    }
 }
 
 function openItemGallery() { 
@@ -4606,15 +4612,21 @@ function closeNotice() {
         body.style.maxHeight = isActive ? null : body.scrollHeight + "px";
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+   document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('.cat-check').forEach(box => {
             box.addEventListener('change', syncFilters);
         });
+        
+        // 🌟 點擊選單連結時，執行「解除釘死與還原位置」的邏輯
         document.querySelectorAll('.nav-links a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('active');
                 document.body.classList.remove('no-scroll');
-document.documentElement.classList.remove('no-scroll');
+                document.documentElement.classList.remove('no-scroll');
+                
+                // 🌟 關鍵修復：解除 fixed 狀態並跳回剛才滑動到的高度
+                document.body.style.top = '';
+                window.scrollTo(0, scrollPosition); 
             });
         });
     });
