@@ -257,19 +257,21 @@ body {
 
         @media (max-width: 768px) {
 
-.slide-layer {
-        background-size: contain !important; /* 確保完整顯示，不裁切 */
-        background-position: top center !important; /* 靠上置中 */
-    }
-    
+/* 🌟 首頁輪播圖手機版 - 霸氣大圖置中版 🌟 */
     .hero {
-        min-height: 50vh !important; /* 縮小輪播區塊的高度，避免下方一大片黑 */
+        min-height: 85vh !important; /* 恢復大版面，佔據手機 85% 高度 */
         padding-top: 80px !important; 
+        background-color: #000000 !important; /* 確保上下留白處是純黑底色 */
     }
     
     .slider-container {
         top: 80px !important;
         height: calc(100% - 80px) !important;
+    }
+
+    .slide-layer {
+        background-size: contain !important; /* 讓圖片完整顯示，字絕對不會被裁切 */
+        background-position: center center !important; /* 🌟 關鍵：讓圖片絕對置中，符合您的截圖 */
     }
 
             .nav-links {
@@ -1139,10 +1141,11 @@ body {
 }/* ==========================================================================
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
-/* 鎖定背景滾動 (防止漢堡選單滑動時看到後面) */
-body.no-scroll { 
+/* 🌟 終極鎖定背景滾動 (專治 iOS 穿透) */
+html.no-scroll, body.no-scroll { 
     overflow: hidden !important; 
-    touch-action: none; /* 🌟 新增：禁止觸控滑動行為 */
+    height: 100vh !important; /* 🌟 加上強制高度，讓網頁無底可滑 */
+    touch-action: none !important; 
 }
 
 @media (max-width: 768px) {
@@ -4316,11 +4319,13 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
     /* ==========================================================================
        1. 基礎功能 (導覽列、彈窗)
        ========================================================================== */
-    function toggleMenu() {
-        const navLinks = document.getElementById('navLinks');
-        navLinks.classList.toggle('active');
-        document.body.classList.toggle('no-scroll');
-    }
+   /* 將原本的 toggleMenu 換成這段： */
+function toggleMenu() {
+    const navLinks = document.getElementById('navLinks');
+    navLinks.classList.toggle('active');
+    document.body.classList.toggle('no-scroll');
+    document.documentElement.classList.toggle('no-scroll'); // 🌟 新增這行，對底層雙重上鎖
+}
 
 function openItemGallery() { 
     document.getElementById('item-gallery-modal').style.display = 'block'; 
@@ -4609,6 +4614,7 @@ function closeNotice() {
             link.addEventListener('click', () => {
                 document.getElementById('navLinks').classList.remove('active');
                 document.body.classList.remove('no-scroll');
+document.documentElement.classList.remove('no-scroll');
             });
         });
     });
