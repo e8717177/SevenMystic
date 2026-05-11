@@ -289,9 +289,9 @@ body {
     border-top: 2px solid #d4af37;
     z-index: 999;
     
-    /* 🌟 核心修正 1：解決底部縫隙 */
-    height: calc(100dvh - 80px); 
-    height: calc(100vh - 80px); /* 備用方案 */
+ 
+height: calc(100vh - 80px); /* 給舊手機看 */
+height: calc(100dvh - 80px); /* 給新手機看，這行會覆蓋上一行（如果瀏覽器支援的話） */
     bottom: 0; 
     
     /* 🌟 核心修正 2：防止選單內部滑動到底後傳導給背景 */
@@ -1151,16 +1151,18 @@ body {
 }/* ==========================================================================
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
+/* --- 修正後的鎖定區塊 --- */
 html.no-scroll, body.no-scroll {
     overflow: hidden !important;
-    height: 100% !important;
+    height: 100dvh !important;    /* 🌟 必須改用 dvh，確保不論網址列在不在，高度都死鎖 */
     width: 100% !important;
-    position: fixed !important; /* 🌟 確保這一行有加 */
+    position: fixed !important;
     top: var(--scroll-y);
+    left: 0;                     /* 🌟 必須加這行，防止 fixed 定位後內容水平偏移 */
 }
 
 @media (max-width: 768px) {
-    /* 1. 導覽列與選單 */
+    /* 1. 導覽列與選單修正 */
     .nav-links {
         position: fixed;
         right: -100%;
@@ -1173,16 +1175,18 @@ html.no-scroll, body.no-scroll {
         padding: 2rem 0 5rem 0;
         border-top: 2px solid #d4af37;
         z-index: 999;
-        height: calc(100vh - 80px);
+        
+        /* 🌟 核心修正：改用 dvh 並確保高度計算精準 */
+        height: calc(100dvh - 80px); 
+        
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior: none; 
     }
     .nav-links.active { 
         right: 0; 
-        overscroll-behavior: none; /* 🌟 新增：防止滾動穿透到底層 */
     }
-
-    .dropdown-menu {
+}   .dropdown-menu {
         position: relative;
         top: 0;
         left: 0; 
@@ -4388,17 +4392,7 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
 /* ==========================================================================
    1. 導覽列與背景鎖定邏輯 (修正版：徹底解決 iOS 背景滑動)
    ========================================================================== */
-let scrollY = 0; // 記錄捲動位置
-
-// 輔助函式：徹底攔截觸控事件
-// 如果目前的設定還有極細微晃動，才改用這個更嚴格的判斷：
-function lockTouch(e) {
-    // 判斷是否為選單內，如果是選單內且選單有捲軸，則允許滑動
-    const navLinks = document.getElementById('navLinks');
-    if (!navLinks.contains(e.target)) {
-        e.preventDefault();
-    }
-}
+let scrollY = 0;
 
 function toggleMenu() {
     const navLinks = document.getElementById('navLinks');
@@ -4406,31 +4400,40 @@ function toggleMenu() {
 
     if (!isActive) {
         // 【打開選單】
-        scrollY = window.scrollY; // 記錄當前位置
+        scrollY = window.scrollY;
+        // 記錄當前位置，防止背景跳回頂部
         document.documentElement.style.setProperty('--scroll-y', `-${scrollY}px`);
         
         document.body.classList.add('no-scroll');
         document.documentElement.classList.add('no-scroll');
         navLinks.classList.add('active');
 
-        // 🌟 核心修正：強制攔截所有會傳導到底層的滑動事件
-        document.addEventListener('touchmove', lockTouch, { passive: false });
+        // 強制鎖定：除了選單內部，其餘觸控全部攔截
+        document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
     } else {
         // 【關閉選單】
         document.body.classList.remove('no-scroll');
         document.documentElement.classList.remove('no-scroll');
         
-        // 恢復捲動位置
+        // 移除監聽
+        document.removeEventListener('touchmove', preventBackgroundScroll);
+        
+        // 回到原本捲動位置
         const scrollTarget = parseInt(document.documentElement.style.getPropertyValue('--scroll-y') || '0') * -1;
         window.scrollTo(0, scrollTarget);
         
         navLinks.classList.remove('active');
-
-        // 🌟 核心修正：移除觸控攔截
-        document.removeEventListener('touchmove', lockTouch);
     }
 }
 
+// 輔助函式：精準判斷滑動對象
+function preventBackgroundScroll(e) {
+    const navLinks = document.getElementById('navLinks');
+    // 如果手指滑動的地方「不在」選單裡面，就徹底殺掉滑動事件
+    if (!navLinks.contains(e.target)) {
+        e.preventDefault();
+    }
+}
 /* ==========================================================================
    2. 牌品專區與其他功能 (維持原有邏輯)
    ========================================================================== */
