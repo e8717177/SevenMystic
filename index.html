@@ -17,436 +17,1961 @@
 
     <link rel="icon" type="image/png" href="favicon.jpg">
     
-   /* ==========================================================================
-       1. 基礎設定與共用工具類 (Base & Utilities)
-       ========================================================================== */
-    .text-center {
-        text-align: center !important;
-        margin-left: 0 !important;
-    }
+    <style>
+    /* ... 下面是您原本的 CSS 樣式，完全不用動 ... */
 
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        cursor: default !important;
-        user-select: none !important;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        -webkit-tap-highlight-color: transparent;
-    }
 
-    a, button, .tab-btn, .gallery-item, .prev-arrow, .next-arrow, .accordion-header, .close-modal, .variant-btn, .notice-btn-orange {
-        cursor: pointer !important;
-    }
 
-    html {
-        scroll-behavior: smooth;
-        scroll-padding-top: 180px; 
-    }
+        /* ==========================================================================
+           1. 基礎設定與共用工具類 (Base & Utilities)
+           ========================================================================== */
+        /* 共用：強制文字置中 (修正標題偏移) */
+.text-center {
+    text-align: center !important;
+    margin-left: 0 !important;
+}
 
-    body {
-        font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
-        background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-        color: #e8e8e8;
-        line-height: 1.8;
-        font-size: 1.2rem;
-    }
+/* 建議放在 <style> 開頭處 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* 核心設定：讓滑鼠游標永遠保持箭頭，不論點哪裡都不會變 I 型 */
+    cursor: default !important;
+    /* 禁止選取文字，防止長按或雙擊導致文字變色 */
+    user-select: none !important;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
 
-    /* 漢堡選單開啟時徹底鎖定背景 */
-    body.no-scroll {
-        overflow: hidden !important;
-        height: 100vh !important;
-        position: fixed !important;
-        width: 100% !important;
-    }
+/* 為了讓按鈕看起來還能點，我們要保留「手指」游標 */
+a, button, .tab-btn, .gallery-item, .prev-arrow, .next-arrow, .accordion-header, .close-modal, .variant-btn {
+    cursor: pointer !important;
+}
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 180px; 
+        }
 
-    main { min-height: 100vh; }
+body {
+    font-family: 'Noto Sans TC', 'Microsoft JhengHei', sans-serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    color: #e8e8e8;
+    line-height: 1.8; /* 稍微增加行高，文字放大後才不會太擠 */
+    font-size: 1.2rem; /* 修改這裡：原預設約1rem，調至1.2rem即放大20% */
+}
 
-    .no-select {
-        user-select: none !important;
-        -webkit-user-select: none;
-        -webkit-user-drag: none;
-        outline: none !important;
-        -webkit-tap-highlight-color: transparent;
-        cursor: default !important;
-    }
+        main {
+            min-height: 100vh;
+        }
 
-    .img-center-50 {
-        width: 50%;
-        height: auto;
-        display: block;
-        margin: 0 auto;
-    }
+        /* 終極防閃爍與禁止選取工具 (套用於需要防止游標變化的元素) */
+        .no-select {
+            user-select: none !important;
+            -webkit-user-select: none;
+            -webkit-user-drag: none;
+            outline: none !important;
+            -webkit-tap-highlight-color: transparent;
+            cursor: default !important;
+        }
 
-    .img-wrapper-bordered {
-        position: relative;
-        width: 50%;
-        margin: 0 auto;
-        border: 1px solid #d4af37;
-        border-radius: 4px;
-        overflow: hidden;
-    }
+        /* 共用：圖片置中 50% (取代原本 HTML 內大量的 inline style) */
+        .img-center-50 {
+            width: 50%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
 
-    .img-wrapper-bordered img {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
+        /* 共用：金框包覆圖片 (取代原本 HTML 內的 inline style) */
+        .img-wrapper-bordered {
+            width: 50%;
+            margin: 0 auto;
+            border: 1px solid #d4af37;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+/* 確保金框內的圖片能自動縮放，保持完美比例 */
+        .img-wrapper-bordered img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
 
-    /* ==========================================================================
-       2. 導覽列與選單 (Navigation)
-       ========================================================================== */
-    nav {
-        background: rgba(0, 0, 0, 0.95);
-        padding: 1rem 5%;
-        position: fixed;
-        width: 100%;
-        top: 0;
-        z-index: 1000;
-        border-bottom: 2px solid #d4af37;
-        backdrop-filter: blur(10px);
-    }
+/* 共用：金框包覆圖片 (取代原本 HTML 內的 inline style) */
+        .img-wrapper-bordered {
+            position: relative; /* 🌟 加上這行，把文字鎖在照片框框裡面 */
+            width: 50%;
+            margin: 0 auto;
+            border: 1px solid #d4af37;
+            border-radius: 4px;
+            overflow: hidden;
+        }
 
-    .nav-container {
-        max-width: 1400px;
-        margin: 0 auto;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
+        /* ==========================================================================
+           2. 導覽列與選單 (Navigation)
+           ========================================================================== */
+        nav {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 1rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid #d4af37;
+            backdrop-filter: blur(10px);
+        }
 
-    .logo {
-        height: 120px; 
-        filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
-    }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .nav-links {
-        display: flex;
-        gap: 2.5rem;
-        list-style: none;
-    }
+        .logo {
+            height: 120px; 
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
+        }
 
-    .nav-links a {
-        color: #d4af37;
-        text-decoration: none;
-        font-weight: 500;
-        font-size: 1.7rem; 
-        transition: all 0.3s ease;
-        position: relative;
-    }
-
-    .nav-links a:hover {
-        color: #f4d03f;
-        text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-    }
-
-    .nav-links a::after {
-        content: '';
-        position: absolute;
-        bottom: -5px;
-        left: 0;
-        width: 0;
-        height: 2px;
-        background: #d4af37;
-        transition: width 0.3s ease;
-    }
-
-    .nav-links a:hover::after { width: 100%; }
-
-    .dropdown { position: relative; }
-    .dropdown-menu {
-        position: absolute;
-        top: 150%; 
-        left: 50%;
-        transform: translateX(-50%) translateY(15px); 
-        background-color: #050505; 
-        min-width: 160px; 
-        list-style: none;
-        padding: 15px 0; 
-        border-bottom: 4px solid #d4af37; 
-        box-shadow: 0 15px 25px rgba(0, 0, 0, 0.8); 
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease; 
-    }
-
-    .dropdown:hover .dropdown-menu {
-        opacity: 1;
-        visibility: visible;
-        transform: translateX(-50%) translateY(0); 
-    }
-
-    .dropdown-menu li a {
-        font-size: 1.3rem; 
-        color: #a0a0a0; 
-        padding: 10px 20px;
-        display: block;
-        text-align: center;
-    }
-
-    .menu-toggle {
-        display: none;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .menu-toggle span {
-        width: 25px;
-        height: 3px;
-        background: #d4af37;
-        transition: 0.3s;
-    }
-
-    .nav-links a.stock-highlight {
-        color: #FFB347; 
-        animation: glowing-lamp 2s infinite ease-in-out; 
-    }
-
-    /* ==========================================================================
-       3. 首頁輪播區 (Hero Slider)
-       ========================================================================== */
-    .hero {
-        position: relative;
-        background-color: #0a0a0a;
-        max-width: 100%;
-        overflow: hidden;
-        padding-top: 100px; 
-    }
-
-    .slider-container {
-        position: relative;
-        width: 100%;
-        aspect-ratio: 16 / 9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #000;
-    }
-
-    .slide-layer {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center center;
-        background-repeat: no-repeat;
-        opacity: 0;
-        transition: opacity 0.8s ease-in-out;
-        z-index: 1;
-    }
-
-    .slide-layer.active {
-        opacity: 1;
-        z-index: 2;
-    }
-
-    .prev-arrow, .next-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%) scaleY(3);
-        color: #d4af37;
-        font-size: 2rem;
-        padding: 16px;
-        z-index: 15;
-        text-decoration: none;
-    }
-
-    .prev-arrow { left: 0; }
-    .next-arrow { right: 0; }
-
-    .hero-bottom-frame {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        height: 40px;
-        background-color: #050505;
-        border-top: 4px solid #d4af37;
-        z-index: 10;
-    }
-
-    /* ==========================================================================
-       4. 全局排版、內容區塊與手風琴
-       ========================================================================== */
-    .chapter-header {
-        max-width: 1400px; 
-        margin: 6rem auto 1rem;
-        padding: 0 5%;
-        text-align: center;
-    }
-    
-    .chapter-header h1 {
-        color: #f4d03f;
-        font-size: 2.5rem;
-        letter-spacing: 5px;
-        text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
-        display: inline-block;
-        position: relative;
-        padding-bottom: 15px;
-    }
-
-    section {
-        max-width: 1400px; 
-        margin: 0 auto;
-        padding: 1.5rem 5%; 
-    }
-
-    h2 {
-        color: #d4af37;
-        font-size: 1.6rem; 
-        margin-bottom: 1rem;
-        border-left: 4px solid #d4af37; 
-        padding-left: 15px; 
-    }
-
-    .content {
-        background: rgba(255, 255, 255, 0.03);
-        padding: 2rem;
-        border-radius: 10px;
-        border: 1px solid rgba(212, 175, 55, 0.2);
-        margin-bottom: 2rem;
-    }
-
-    .text-block { padding: 1rem 0; }
-    .quote-text {
-        color: #d4af37 !important;
-        font-size: 1.15rem;
-        font-style: italic;
-        border-left: 4px solid #d4af37;
-        padding: 1rem 1.5rem;
-        margin: 1.5rem 0;
-        background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(0,0,0,0) 100%);
-    }
-
-    .rules-container {
-        background: rgba(212, 175, 55, 0.05); 
-        border-left: 5px solid #d4af37; 
-        padding: 2rem;
-        margin: 2rem 0;
-    }
-
-    .rules-list { list-style: none; padding: 0; }
-    .rules-list li { margin-bottom: 1rem; position: relative; }
-
-    .accordion-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.2); margin-bottom: 1rem; border-radius: 8px; overflow: hidden; }
-    .accordion-header { width: 100%; padding: 1.5rem; background: none; border: none; color: #d4af37; font-size: 1.25rem; display: flex; justify-content: space-between; align-items: center; }
-    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
-
-    /* ==========================================================================
-       5. 牌品專區彈窗樣式
-       ========================================================================== */
-    .gallery-modal {
-        display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%;
-        background-color: rgba(0, 0, 0, 0.95); backdrop-filter: blur(15px);
-    }
-    .gallery-modal .modal-content {
-        margin: 2% auto; width: 90%; max-width: 1200px; height: 85vh; background: #111; border: 1px solid #d4af37; 
-        padding: 30px; position: relative; display: flex; flex-direction: column; overflow: hidden;
-    }
-    .close-modal-in-box { position: absolute; top: 25px; right: 30px; color: #d4af37; font-size: 35px; z-index: 100; }
-
-    /* 牌品專區大方框 (分類+標題) */
-    .gallery-tabs {
-        display: flex; gap: 20px; padding: 13px; background: rgba(15, 15, 15, 0.95);
-        border: 1px solid rgba(212, 175, 55, 0.4); border-radius: 12px; margin-bottom: 30px;
-    }
-
-    /* 牌品專區勾選框 */
-    .effects-filter-zone { display: flex; flex-direction: column; gap: 6px; padding-right: 25px; border-right: 1px solid rgba(212, 175, 55, 0.3); }
-    .eff-label input { display: none; }
-    .c-box { width: 15px; height: 15px; border: 1px solid #d4af37; display: inline-block; position: relative; }
-    .eff-label input:checked + .c-box { background: #d4af37; }
-
-    /* ==========================================================================
-       6. 燈箱與介紹框
-       ========================================================================== */
-    #lightbox { display: none; position: fixed; z-index: 3000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); justify-content: center; align-items: center; flex-direction: column; }
-    #lightbox img { max-width: 100%; max-height: 65vh; border: 2px solid #d4af37; }
-    .info-box-916 { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90vw; max-width: 360px; height: 50vh; background: rgba(10,10,10,0.98); border: 2px solid #d4af37; z-index: 3010; padding: 25px; border-radius: 12px; }
-
-    /* ==========================================================================
-       7. 手機版 RWD 修正區 (重點修正)
-       ========================================================================== */
-    @media (max-width: 768px) {
-        .logo { height: 50px; }
         .nav-links {
-            position: fixed; right: -100%; top: 80px; flex-direction: column; background: rgba(0, 0, 0, 0.98); width: 100%; height: calc(100vh - 80px); transition: 0.3s; padding: 2rem 0; border-top: 2px solid #d4af37;
-        }
-        .nav-links.active { right: 0; }
-        .menu-toggle { display: flex; z-index: 1001; }
-
-        /* 首頁 RWD 比例優化 */
-        .slider-container {
-            aspect-ratio: 4 / 3 !important; 
-            max-height: 60vh !important;
-            background-color: #000;
-        }
-        .slide-layer { background-size: contain !important; }
-
-        /* 牌品專區：大方框與標題 RWD */
-        .gallery-modal .modal-content { width: 96%; padding: 15px 10px; }
-        .gallery-tabs { flex-direction: column; padding: 10px; margin-bottom: 8px; }
-        .modal-title-in-box { font-size: 1.4rem !important; text-align: center; width: 100%; }
-        .close-modal-in-box { top: 10px; right: 10px; font-size: 32px; }
-
-        /* 牌品專區：分類按鈕 RWD (徹底清理重複代碼) */
-        .category-btn-zone {
-            display: flex !important;
-            justify-content: flex-start !important; 
-            flex-wrap: wrap !important; 
-            width: 100% !important;
-            gap: 8px !important;
-            margin-left: 0 !important;
-            border-top: none !important;
-            margin-top: 0 !important;
-            padding: 0 5px !important;
+            display: flex;
+            gap: 2.5rem;
+            list-style: none;
         }
 
-        .category-btn-zone .tab-btn {
-            flex: 0 0 calc(33.33% - 8px) !important; /* 強制一排三個 */
-            font-size: 0.85rem !important;
-            padding: 10px 0 !important;
-            margin: 0 !important;
-            min-width: unset !important;
-            text-align: center !important;
-            border: 1px solid #333 !important;
-            display: inline-flex !important;
+        .nav-links a {
+            color: #d4af37;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.7rem; 
+            transition: all 0.3s ease;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .nav-links a:hover {
+            color: #f4d03f;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* 導覽列下拉選單 */
+        .dropdown { position: relative; }
+        .dropdown-menu {
+            position: absolute;
+            top: 150%; 
+            left: 50%;
+            transform: translateX(-50%) translateY(15px); 
+            background-color: #050505; 
+            min-width: 160px; 
+            list-style: none;
+            padding: 15px 0; 
+            border-bottom: 4px solid #d4af37; 
+            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.8); 
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease; 
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0); 
+        }
+
+        .dropdown-menu li { width: 100%; }
+        .dropdown-menu li a {
+            font-size: 1.3rem; 
+            color: #a0a0a0; 
+            padding: 10px 20px;
+            display: block;
+            text-align: center;
+        }
+
+        .dropdown-menu li a::after { display: none; }
+        .dropdown-menu li a:hover {
+            color: #f4d03f; 
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.6); 
+            background-color: rgba(212, 175, 55, 0.05); 
+        }
+
+        /* 漢堡選單 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+        }
+        .menu-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #d4af37;
+            transition: 0.3s;
+        }
+
+        /* 導覽列特殊光效 (牌品專區、橘色呼吸燈) */
+        .nav-links a.stock-highlight {
+            color: #FFB347; 
+            animation: glowing-lamp 2s infinite ease-in-out; 
+        }
+        .nav-links a.stock-highlight:hover {
+            color: #FFFFFF; 
+            text-shadow: 0 0 15px rgba(255, 209, 128, 1), 0 0 30px rgba(255, 179, 71, 0.9);
+            animation: none; 
+        }
+        .nav-links a.stock-highlight::after { background: linear-gradient(90deg, #E87A00, #FFB347); }
+
+        .dropdown-menu li a.subtle-orange-glow, .faq-orange-glow {
+            color: #FFB347 !important; 
+            text-shadow: 0 0 5px rgba(255, 179, 71, 0.3);
+            animation: subtle-breathe 2.5s infinite ease-in-out;
+        }
+        .dropdown-menu li a.subtle-orange-glow:hover {
+            color: #FFFFFF !important;
+            text-shadow: 0 0 15px rgba(255, 209, 128, 0.8);
+            animation: none; 
+            background-color: rgba(255, 179, 71, 0.1) !important; 
+        }
+        .accordion-item.active .faq-orange-glow {
+            text-shadow: 0 0 12px rgba(255, 179, 71, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                right: -100%;
+                top: 80px;
+                flex-direction: column;
+                background: rgba(0, 0, 0, 0.98);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                padding: 2rem 0;
+                border-top: 2px solid #d4af37;
+                z-index: 999;
+                height: calc(100vh - 80px);
+                overflow-y: auto;
+            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: flex; z-index: 1001; }
+            .logo { height: 50px; }
+        }
+
+        /* ==========================================================================
+           3. 首頁輪播區 (Hero Slider)
+           ========================================================================== */
+/* --- 整合優化與原本樣式的 Hero Slider --- */
+.hero {
+    position: relative;
+    min-height: 100vh; 
+    padding-top: 100px; 
+    background-color: #0a0a0a;
+    max-width: 100%; 
+    overflow: hidden; 
+}
+
+.slider-container {
+    position: absolute;
+    top: 100px;
+    left: 0;
+    width: 100%;
+    height: calc(100% - 100px); 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 預載層：確保 Netlify 部署後不再閃爍 */
+.slide-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out; 
+    z-index: 1;
+}
+
+/* 目前顯示的圖片 */
+.slide-layer.active {
+    opacity: 1;
+    z-index: 2;
+}
+
+/* 保留你原本漂亮的箭頭樣式 */
+.prev-arrow, .next-arrow {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -22px; 
+    color: #d4af37;
+    font-weight: bold;
+    font-size: 2rem; 
+    transform: scaleY(3); /* 保留原本長長的箭頭風格 */
+    transition: 0.6s ease;
+    text-decoration: none;
+    z-index: 10; 
+    user-select: none; 
+    -webkit-user-select: none; 
+}
+
+.prev-arrow { left: 0; }
+.next-arrow { right: 0; }
+.prev-arrow:hover, .next-arrow:hover { color: white; }
+
+/* 保留你原本的底框樣式 */
+.hero-bottom-frame {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; 
+    background-color: #050505; 
+    border-top: 4px solid #d4af37; 
+    z-index: 10;
+}
+
+        /* ==========================================================================
+           4. 全局排版與內文區塊 (Typography & Layout)
+           ========================================================================== */
+        .chapter-header {
+            max-width: 1400px; 
+            margin: 6rem auto 1rem;
+            padding: 0 5%;
+            text-align: center;
+            outline: none;
+        }
+        
+        .chapter-header h1 {
+            color: #f4d03f;
+            font-size: 2.5rem;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            display: inline-block;
+            position: relative;
+            padding-bottom: 15px;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        
+        .chapter-header h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: #d4af37;
+        }
+
+        section {
+            position: relative; /* 為了遮罩覆蓋 */
+            max-width: 1400px; 
+            margin: 0 auto;
+            padding: 1.5rem 5%; 
+            outline: none;
+        }
+
+        h2 {
+            color: #d4af37;
+            font-size: 1.6rem; 
+            margin-bottom: 1rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            padding-bottom: 0.5rem;
+            padding-left: 15px; 
+            border-left: 4px solid #d4af37; 
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .content {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 2rem;
+            border-radius: 10px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            margin-bottom: 2rem;
+            min-height: 150px; 
+            cursor: default; 
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .text-block { padding: 1rem 0; }
+        .text-block h3 {
+            color: #d4af37;
+            font-size: 1.3rem;
+            margin-top: 2.5rem; 
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+            font-weight: normal;
+            margin-left: -10px; 
+        }
+        .text-block h3:first-child { margin-top: 0; }
+        .text-block p {
+            color: #d0d0d0; 
+            line-height: 1.8; 
+            text-align: justify; 
+        }
+
+        /* ==========================================================================
+           5. 各類清單、強調框與排版組件 (Lists, Quotes, Boxes)
+           ========================================================================== */
+        .info-list, .rules-list {
+            list-style: none;
+            padding-left: 0;
+            margin-top: 1rem;
+        }
+        .info-list li, .rules-list li {
+            color: #d0d0d0;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            padding-left: 1.8rem;
+            position: relative;
+            text-align: justify;
+        }
+        .info-list li::before {
+            content: '✦'; 
+            color: #d4af37;
+            position: absolute;
+            left: 0;
+            font-size: 1.1rem;
+        }
+        .info-list strong { color: #e8e8e8; letter-spacing: 1px; }
+
+        /* 鐵律/戒律強化容器 */
+        .rules-container {
+            background: rgba(212, 175, 55, 0.05); 
+            border: 1px solid rgba(212, 175, 55, 0.3); 
+            border-left: 5px solid #d4af37; 
+            padding: 2rem;
+            margin: 2rem 0;
+            border-radius: 4px;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.6); 
+        }
+        .rules-header {
+            color: #f4d03f !important;
+            font-size: 1.5rem !important;
+            font-weight: bold !important;
+            margin-bottom: 1.5rem !important;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        .rules-container .rules-list li {
+            padding-left: 2.5rem; 
+            transition: all 0.3s ease; 
+        }
+        /* 找到這段並修改顏色與間距 */
+.rules-container .rules-list li::before {
+    content: '◈';
+    color: #f4d03f; /* 修改這裡：設定為與文字一致的金色 */
+    text-shadow: 0 0 8px rgba(212, 175, 55, 0.8);
+    left: 0.5rem;
+    font-weight: bold;
+    padding-right: 12px; /* 增加這裡：這就是你要的「空一格」效果 */
+}
+
+/* 確保全網頁不閃爍編輯符號的全局設定 */
+* {
+    cursor: default !important;
+    user-select: none !important;
+}
+
+/* 讓原本的數字與文字維持同樣顏色 */
+.rules-container .rules-list li strong {
+    color: #f4d03f; /* 確保「一、」到「四、」也是金色 */
+    font-size: 1.1rem;
+}
+
+        /* 宣言框 / 破除迷信框 */
+        .manifesto-box {
+            position: relative;
+            background: linear-gradient(180deg, rgba(10,10,10,0.9) 0%, rgba(0,0,0,0.7) 100%);
+            border-top: 1px dashed rgba(212, 175, 55, 0.5);
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.5);
+            padding: 3rem 2.5rem 2rem;
+            margin: 3rem 0;
+            text-align: justify;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        .manifesto-box::before {
+            content: '❝';
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 5rem;
+            color: rgba(212, 175, 55, 0.15);
+            line-height: 1;
+            font-family: Georgia, serif;
+            user-select: none;
+        }
+        .manifesto-title {
+            color: #e8e8e8;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        .manifesto-box p { color: #c0c0c0; margin-bottom: 1.2rem; line-height: 1.8; position: relative; z-index: 1; }
+        .manifesto-box strong { color: #f4d03f; }
+
+        /* 金色引言與小標 */
+        .quote-text {
+            color: #d4af37 !important;
+            font-size: 1.15rem;
+            font-style: italic;
+            border-left: 4px solid #d4af37;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background: linear-gradient(90deg, rgba(212, 175, 55, 0.1) 0%, rgba(0,0,0,0) 100%);
+            letter-spacing: 1px;
+        }
+        .sub-title {
+            color: #f4d03f;
+            font-size: 1.15rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        /* 序言專區 */
+        .preface-section {
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+            padding: 0 20px;
+        }
+        .preface-text {
+            color: #cccccc;
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+        }
+        .preface-highlight {
+            color: #d4af37; 
+            font-size: 1.2rem;
+            font-weight: bold;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+        }
+        .preface-divider {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #d4af37, transparent);
+            margin: 20px auto;
+        }
+
+        /* ==========================================================================
+           6. 標籤切換系統 (Tabs)
+           ========================================================================== */
+        .master-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 3rem; 
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2); 
+            flex-wrap: wrap; 
+        }
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #888; 
+            font-size: 1.4rem;
+            font-family: inherit;
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            position: relative;
+            transition: all 0.3s ease;
+            outline: none;
+            letter-spacing: 2px;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
         }
+        .tab-dot { margin: 0 8px; font-size: 1.3em; transition: color 0.3s ease; }
+        .tab-btn:hover { color: #e8e8e8; }
+        .tab-btn.active {
+            color: #f4d03f;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+        }
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; 
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #d4af37;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+        }
+        .master-content { display: none; animation: fadeUp 0.6s ease; }
 
-        /* 展區須知按鈕 RWD */
-        .notice-btn-orange {
-            position: absolute !important;
-            top: 18px !important; 
-            right: 45px !important;
-            font-size: 0.75rem !important;
-            padding: 4px 8px !important;
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* 功效過濾區 RWD */
-        .effects-filter-zone {
-            display: grid !important;
-            grid-template-columns: repeat(5, 1fr) !important;
-            gap: 8px 2px !important;
-            border: none !important;
-            padding: 5px 0 !important;
-            max-height: 80px;
-            overflow-y: auto;
+        /* ==========================================================================
+           7. 影像實紀與藝廊組件 (Gallery & Media)
+           ========================================================================== */
+        /* 主圖容器與版權標示 */
+        .hero-image-wrapper {
+            width: 100%;
+            position: relative;
+            margin-top: 1rem;
+            margin-bottom: 3rem; 
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
         }
-        .eff-label { font-size: 0.7rem !important; min-width: unset !important; }
+        .hero-image-wrapper img { width: 100%; height: auto; display: block; }
+        .hero-image-wrapper::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 35%; 
+            background: linear-gradient(to top, #050505 0%, transparent 100%);
+            pointer-events: none;
+        }
+        .image-caption {
+            position: absolute;
+            bottom: 12px;
+            right: 18px;
+            color: #d4af37; 
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            z-index: 2; 
+            opacity: 0.65; 
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.6); 
+            pointer-events: none; 
+            user-select: none;
+        }
+
+        /* 網格藝廊 */
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            background: #000;
+            flex: 0 0 calc((100% - 60px) / 5);
+            max-width: calc((100% - 60px) / 5);
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+        .gallery-item:hover img { transform: scale(1.1); }
+        
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            padding: 15px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none !important; 
+            user-select: none !important;
+        }
+        .gallery-item:hover .gallery-overlay { opacity: 1; }
+        .gallery-overlay span { color: #f4d03f; font-weight: bold; font-size: 0.95rem; cursor: default !important; }
+
+        /* 影片播放圖標 */
+        .video-play-overlay {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px; height: 60px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 2px solid #d4af37;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            transition: 0.3s;
+            pointer-events: none;
+        }
+        .play-icon {
+            width: 0; height: 0;
+            border-top: 12px solid transparent;
+            border-bottom: 12px solid transparent;
+            border-left: 20px solid #d4af37;
+            margin-left: 5px;
+        }
+        .gallery-item:hover .video-play-overlay {
+            background: rgba(212, 175, 55, 0.6);
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 20px #d4af37;
+        }
+
+        /* 影片 Wrapper (防閃爍) */
+        .video-wrapper {
+            position: relative;
+            width: 80vw;
+            padding-bottom: 45%;
+            height: 0;
+            outline: none !important;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            border: 2px solid #d4af37;
+            border-radius: 4px;
+        }
+
+        /* ==========================================================================
+           8. 全螢幕燈箱 (Lightbox)
+           ========================================================================== */
+        #lightbox {
+            display: none;
+            position: fixed;
+            z-index: 3000; 
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.92);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .lightbox-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 80vw;
+            animation: zoomIn 0.3s ease;
+            position: relative;
+            outline: none !important;
+        }
+        #lightbox img {
+            max-width: 100%;
+            max-height: 65vh;
+            border: 2px solid #d4af37;
+            border-radius: 4px;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+        }
+        #lightbox-caption {
+            color: #e8e8e8;
+            font-size: 1.2rem;
+            margin-top: 20px;
+            text-align: center;
+            letter-spacing: 2px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+            line-height: 1.6;
+        }
+        .lightbox-close {
+            position: absolute; 
+            top: 30px; right: 40px;        
+            color: #d4af37;
+            font-size: 3rem;    
+            font-weight: bold;
+            cursor: pointer !important;
+            z-index: 3010;      
+            transition: 0.3s;
+        }
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #d4af37;
+            font-size: 3.5rem;
+            z-index: 3001; 
+            padding: 20px;
+            text-shadow: 0 0 15px rgba(0,0,0,0.8);
+            cursor: pointer !important;
+            transition: 0.3s;
+        }
+        .lightbox-prev { left: 5%; }
+        .lightbox-next { right: 5%; }
+        .lightbox-close:hover, .lightbox-prev:hover, .lightbox-next:hover { color: #fff; text-shadow: 0 0 20px #d4af37; }
+
+        @keyframes zoomIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* ==========================================================================
+           9. 特殊組件 (彈窗、警告遮罩、手風琴、奇效見證等)
+           ========================================================================== */
+        
+        /* 專區警告遮罩 */
+        .warning-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(8px); 
+            z-index: 100;
+            display: none; 
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            animation: fadeIn 0.5s ease forwards;
+        }
+        .warning-modal {
+            background: linear-gradient(135deg, #121212 0%, #050505 100%);
+            border: 2px solid #d4af37;
+            padding: 2.5rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+        .warning-modal p { color: #e8e8e8; font-size: 1.1rem; margin-bottom: 2rem; letter-spacing: 1px; }
+        .warning-btns { display: flex; justify-content: center; gap: 1.5rem; }
+        .warning-btn { padding: 0.8rem 1.5rem; cursor: pointer; font-size: 1rem; transition: all 0.3s ease; border-radius: 4px; background: transparent; letter-spacing: 1px; }
+        .btn-skip { border: 1px solid #888; color: #aaa; }
+        .btn-skip:hover { background: rgba(136, 136, 136, 0.1); color: #fff; border-color: #fff; }
+        .btn-visit { border: 1px solid #d4af37; color: #d4af37; }
+        .btn-visit:hover { background: #d4af37; color: #000; box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+
+        /* 牌品專區彈窗 (Gallery Modal) */
+        .gallery-modal {
+            display: none; 
+            position: fixed; z-index: 2000; 
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(15px);
+        }
+        .gallery-modal .modal-content {
+            margin: 2% auto; width: 90%; max-width: 1200px; height: 85vh; 
+            background: #111; border: 1px solid #d4af37; border-radius: 10px;
+            padding: 30px; position: relative; display: flex; flex-direction: column; 
+            overflow: hidden !important; 
+        }
+        .modal-title { text-align: center; color: #d4af37; font-size: 2rem; letter-spacing: 5px; margin-bottom: 30px; }
+        .close-modal { position: absolute; right: 25px; top: 20px; color: #d4af37; font-size: 35px; cursor: pointer; z-index: 2010; line-height: 1; }
+.gallery-tabs {
+            flex-shrink: 0; border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 20px;
+            display: flex; justify-content: center; gap: 15px; width: 100%;
+            flex-wrap: wrap; /* 🌟 修正：讓手機版分類按鈕可以自動換行，不會超出螢幕 */
+        }
+        .gallery-tabs .tab-btn { border: 1px solid #444; border-radius: 5px; }
+        .gallery-tabs .tab-btn.active, .gallery-tabs .tab-btn:hover { border-color: #d4af37; color: #f4d03f; background: rgba(212, 175, 55, 0.1); }
+        .gallery-tabs .tab-btn.active { border-bottom: 4px solid #f4d03f; margin-bottom: -3px; border-radius: 5px 5px 0 0; }
+        
+        #items-container {
+            flex-grow: 1; overflow-y: auto !important; display: flex !important; flex-wrap: wrap !important;
+            align-content: flex-start; justify-content: center; gap: 15px; width: 100%; padding: 10px 15px 50px 15px;
+        }
+        #items-container .gallery-item { flex: 0 0 calc((100% - 80px) / 5) !important; max-width: calc((100% - 80px) / 5) !important; margin-bottom: 20px; }
+        #items-container .gallery-item img { width: 100%; height: 180px; pointer-events: auto !important; cursor: pointer !important; }
+        #items-container .gallery-item:hover img { border-color: #d4af37; filter: brightness(1.1); }
+        #items-container::-webkit-scrollbar { width: 7px; }
+        #items-container::-webkit-scrollbar-track { background: #0a0a0a; }
+        #items-container::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
+
+/* 牌品專區：底部固定宣告區塊 (緊湊版) */
+        .modal-footer-notice {
+            flex-shrink: 0;
+            width: 100%;
+            text-align: center;
+            color: #f4d03f;
+            font-size: 1.05rem;
+            padding-top: 5px;        
+            margin-top: 5px;         
+            margin-bottom: -20px;    
+            border-top: 3px solid rgba(212, 175, 55, 0.5); /* 🌟 修正：透明度不可為 50，改為 0.5 才會顯示金線 */
+            letter-spacing: 2px;
+            z-index: 10;
+            user-select: none;
+        }
+
+        /* 戒律專區手風琴 (Accordion) */
+        .accordion-container { max-width: 1000px; margin: 0 auto; }
+        .accordion-item { background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(212, 175, 55, 0.2); border-radius: 8px; margin-bottom: 1rem; overflow: hidden; transition: all 0.3s ease; }
+        .accordion-item.active { border-color: rgba(212, 175, 55, 0.6); box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); background: rgba(255, 255, 255, 0.04); }
+        .accordion-header {
+            width: 100%; text-align: left; padding: 1.5rem; background: none; border: none; color: #d4af37;
+            font-size: 1.25rem; font-weight: bold; letter-spacing: 1.5px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease;
+        }
+        .accordion-header:hover { color: #f4d03f; background: rgba(212, 175, 55, 0.08); }
+        .accordion-icon { font-size: 1.8rem; line-height: 1; transition: transform 0.3s ease; color: #d4af37; }
+        .accordion-item.active .accordion-icon { transform: rotate(45deg); }
+        .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-content-inner { padding: 0 1.5rem 1.5rem 1.5rem; border-top: 1px dashed rgba(212, 175, 55, 0.2); margin-top: 0.5rem; padding-top: 1rem; }
+        .accordion-content-inner .rules-list { padding-left: 1.5rem !important; margin-left: 0 !important; }
+        .accordion-content-inner .rules-list li { padding-left: 2rem !important; }
+        .accordion-content-inner .rules-list li::before { left: 0 !important; }
+
+        /* 奇效見證案例 */
+        .case-section { margin-bottom: 3.5rem; }
+        .case-title-wrapper { display: flex; align-items: center; text-align: center; margin-bottom: 1.5rem; }
+        .case-title-wrapper::before, .case-title-wrapper::after { content: ''; flex: 1; border-bottom: 1px dashed rgba(212, 175, 55, 0.4); }
+        .case-title-wrapper::before { margin-right: 20px; }
+        .case-title-wrapper::after { margin-left: 20px; }
+        .case-title { color: #f4d03f; font-size: 1.25rem; letter-spacing: 2px; font-weight: bold; text-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+        .case-description { color: #cccccc; line-height: 1.8; text-align: justify; margin-bottom: 1.5rem; padding: 0 10px; font-size: 1.05rem; letter-spacing: 1px; }
+
+        /* 動態特效 */
+        @keyframes subtle-breathe {
+            0% { text-shadow: 0 0 4px rgba(255, 179, 71, 0.2); opacity: 0.85; }
+            50% { text-shadow: 0 0 12px rgba(255, 179, 71, 0.7); opacity: 1; }
+            100% { text-shadow: 0 0 4px rgba(255, 179, 71, 0.2); opacity: 0.85; }
+        }
+        @keyframes glowing-lamp {
+            0% { color: #FFB347; text-shadow: 0 0 8px rgba(255, 179, 71, 0.6), 0 0 15px rgba(232, 122, 0, 0.4); }
+            50% { color: #FFF3E0; text-shadow: 0 0 12px rgba(255, 209, 128, 1), 0 0 25px rgba(255, 158, 42, 0.8), 0 0 35px rgba(232, 122, 0, 0.5); }
+            100% { color: #FFB347; text-shadow: 0 0 8px rgba(255, 179, 71, 0.6), 0 0 15px rgba(232, 122, 0, 0.4); }
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* 底部與聯繫諮詢 */
+        footer {
+            background: rgba(0, 0, 0, 0.95); text-align: center; padding: 2rem; border-top: 2px solid #d4af37; color: #888;
+        }
+        #cat-contact-section .contact-container { display: flex !important; flex-direction: column !important; gap: 1.5rem !important; padding: 1rem 0 !important; }
+        #cat-contact-section .contact-item { display: flex !important; align-items: center !important; gap: 12px !important; color: #e8e8e8 !important; font-size: 1.1rem !important; }
+        #cat-contact-section .contact-icon { width: 26px !important; height: 26px !important; object-fit: contain !important; mix-blend-mode: screen; border-radius: 4px !important; filter: drop-shadow(0 0 4px rgba(212, 175, 55, 0.6)) !important; display: inline-block !important; background-color: transparent !important; }
+        #cat-contact-section .contact-item strong { color: #d4af37 !important; white-space: nowrap !important; }
+        #cat-contact-section .contact-link { color: #d0d0d0 !important; text-decoration: underline !important; }
+        #cat-contact-section .contact-link:hover { color: #f4d03f !important; }
+
+        /* RWD 響應式微調 */
+        @media (max-width: 768px) {
+            .lightbox-prev, .lightbox-next { font-size: 2.5rem; padding: 10px; }
+            .lightbox-prev { left: 0; }
+            .lightbox-next { right: 0; }
+            .lightbox-content { max-width: 95vw; }
+            #lightbox img { max-height: 55vh; }
+            #lightbox-caption { font-size: 1rem; }
+        }
+
+/* ==========================================================================
+   10. 燈箱擴充控制面板 (翻面、換色)
+   ========================================================================== */
+/* ==========================================================================
+   燈箱擴充控制面板 (翻面、換色) 與 9:16 介紹框
+   ========================================================================== */
+.lightbox-controls {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 3005;
+}
+
+.variant-btn {
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #d4af37;
+    color: #d4af37;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    letter-spacing: 1px;
+}
+
+.variant-btn:hover, .variant-btn.active {
+    background: #d4af37;
+    color: #000;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
+    font-weight: bold;
+}
+
+.color-options {
+    display: flex;
+    gap: 10px;
+    border-left: 1px solid rgba(212, 175, 55, 0.3);
+    padding-left: 15px;
+}
+/* 牌品介紹框 - 最終修正版：切斷與圖片的連結，強制固定大小 */
+.info-box-916 {
+    display: none;
+    position: fixed; /* 🌟 關鍵1：改成 fixed，直接對齊螢幕，不受圖片縮放影響 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;     /* 🌟 關鍵2：改用 vw (視圖寬度)，不要用 % */
+    max-width: 360px;
+    height: 50vh;    /* 🌟 關鍵3：強制鎖定高度 */
+    background: rgba(10, 10, 10, 0.98);
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    z-index: 3010;
+    padding: 35px 25px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+    box-sizing: border-box;
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 標題置中與發光 */
+#info-box-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #f4d03f;
+    text-align: center;
+    margin: 0 auto 25px auto;
+    width: 100%;
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: 4px;
+    text-indent: 4px; /* 抵銷字距偏左 */
+    text-shadow: 0 0 12px rgba(244, 208, 63, 0.7);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    padding-bottom: 15px;
+}
+
+/* 內文滾動區域 */
+#info-box-text {
+    flex-grow: 1;
+    overflow-y: auto;
+    color: #ffffff;
+    line-height: 2.0;
+    text-align: justify;
+    font-size: 1.1rem;
+    padding-right: 10px;
+}
+
+/* 底部按鈕區域的金線 */
+.info-box-btn-area {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(212, 175, 55, 0.4);
+    text-align: center;
+}
+
+/* 返回按鈕 */
+.info-box-content .variant-btn {
+    display: inline-block;
+    background: transparent !important;
+    border: 1px solid #d4af37 !important;
+    color: #d4af37 !important;
+    width: fit-content !important;
+    min-width: 100px;
+    padding: 8px 25px !important;
+    font-size: 1.1rem;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.info-box-content .variant-btn:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+}
+
+/* 捲軸美化 */
+#info-box-text::-webkit-scrollbar { width: 4px; }
+#info-box-text::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
+
+@keyframes box-glow {
+    0% { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+    50% { border-color: #f4d03f; box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
+    100% { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+}
+}/* ==========================================================================
+   七奧閣 - Master RWD 終極整合控制中心
+   ========================================================================== */
+/* 鎖定背景滾動 (防止漢堡選單滑動時看到後面) */
+body.no-scroll { overflow: hidden !important; }
+
+@media (max-width: 768px) {
+    /* 1. 導覽列與選單 */
+    .nav-links {
+        position: fixed;
+        right: -100%;
+        top: 80px;
+        flex-direction: column;
+        background: rgba(0, 0, 0, 0.98);
+        width: 100%;
+        text-align: center;
+        transition: 0.3s;
+        padding: 2rem 0 5rem 0;
+        border-top: 2px solid #d4af37;
+        z-index: 999;
+        height: calc(100vh - 80px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .nav-links.active { right: 0; }
+    .menu-toggle { display: flex; z-index: 1001; }
+    .logo { height: 50px; }
+
+    .dropdown-menu {
+        position: relative;
+        top: 0;
+        left: 0; 
+        width: 100%; 
+        transform: none !important;
+        background-color: transparent;
+        box-shadow: none;
+        border-bottom: none;
+        padding: 5px 0 15px 0;
+        opacity: 1;
+        visibility: visible;
+        display: none; 
+    }
+    .dropdown:hover .dropdown-menu,
+    .dropdown:active .dropdown-menu {
+        display: block; 
+    }
+    .dropdown-menu li a {
+        font-size: 1.2rem;
+        padding: 8px 20px;
+        color: #888;
     }
 
-    /* 動態特效 */
-    @keyframes glowing-lamp {
-        0% { color: #FFB347; text-shadow: 0 0 8px rgba(255, 179, 71, 0.6); }
-        50% { color: #FFF3E0; text-shadow: 0 0 20px rgba(255, 209, 128, 1); }
-        100% { color: #FFB347; text-shadow: 0 0 8px rgba(255, 179, 71, 0.6); }
+    /* 2. 直向模式 (Portrait) 優化 */
+    @media (orientation: portrait) {
+        .img-center-50, .img-wrapper-bordered { width: 95% !important; }
+        section { padding: 1.5rem 4% !important; }
+        .content { padding: 1.2rem !important; }
+        .chapter-header { margin: 3rem auto 1rem; }
+        .chapter-header h1 { font-size: 1.8rem; }
+        .manifesto-box { padding: 2.5rem 1.2rem 1.5rem !important; margin: 2rem 0; }
+        .rules-container { padding: 1.2rem !important; }
+        .quote-text { padding: 0.8rem 1rem; }
+        .master-tabs { gap: 0.8rem !important; }
+        .tab-btn { font-size: 1.1rem !important; padding: 0.6rem 0.8rem !important; }
     }
+
+    /* 3. 網格全局優化 */
+    .gallery-grid { gap: 10px !important; }
+    .gallery-item {
+        flex: 0 0 calc((100% - 10px) / 2) !important;
+        max-width: calc((100% - 10px) / 2) !important;
+        margin-bottom: 10px;
+    }
+    .gallery-item img { height: 160px; }
+
+    /* 4. 橫向模式 (Landscape) 防護 */
+    @media (max-height: 500px) and (orientation: landscape) {
+        nav { padding: 0.5rem 5%; }
+        .logo { height: 40px; }
+        .nav-links { top: 60px; height: calc(100vh - 60px); }
+        .gallery-modal .modal-content { height: 98vh; margin: 1vh auto; padding: 10px; }
+        .modal-title { font-size: 1.2rem; margin-bottom: 5px; }
+        #lightbox img { max-height: 60vh !important; }
+        .lightbox-controls { margin-top: 10px; }
+        .prev-arrow, .next-arrow { transform: scaleY(1.5); margin-top: -10px; }
+    }
+
+    /* 5. 基礎功能修復 & 🌟 手機版特定防護 */
+    .video-wrapper { width: 100%; padding-bottom: 56.25%; }
+    .warning-modal { padding: 1.5rem; width: 90%; }
+    .gallery-modal .modal-content { width: 95%; height: 90vh; }
+    
+    /* 🌟 修正：覆蓋 ID 權重，確保牌品專區在手機上不會擠成 5 張 */
+    #items-container { 
+        padding: 10px 5px 60px 5px !important; 
+        gap: 10px !important; 
+    }
+    #items-container .gallery-item { 
+        flex: 0 0 calc((100% - 10px) / 2) !important; 
+        max-width: calc((100% - 10px) / 2) !important; 
+        margin-bottom: 15px !important; 
+    }
+    /* 🌟 修正：讓手機版的叉叉按鈕不會跑到畫面中間擋住圖片 */
+    .lightbox-close, .close-modal {
+        top: 10px !important;
+        right: 15px !important;
+        font-size: 2.5rem !important;
+    }
+    
+    .modal-footer-notice { margin-bottom: -10px; font-size: 0.95rem; }
+    .lightbox-prev, .lightbox-next { font-size: 2.5rem; padding: 10px; }
+    .lightbox-prev { left: 0; }
+    .lightbox-next { right: 0; }
+    .lightbox-content { max-width: 95vw; }
+    #lightbox img { max-height: 55vh; }
+    #lightbox-caption { font-size: 1rem; }
+}
+/* 9:16 介紹框核心樣式修正 */
+/* 9:16 介紹框核心樣式 - 最終修正版 */
+.info-box-916 {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 88%;
+    max-width: 700px;
+    aspect-ratio: 9 / 16;
+    background: rgba(10, 10, 10, 0.98);
+    border: 2px solid #d4af37;
+    border-radius: 12px;
+    z-index: 3010;
+    padding: 35px 25px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 1);
+    box-sizing: border-box;
+}
+
+.info-box-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 標題：修正置中偏差與發光效果 */
+#info-box-title, #extra-info-box-title {
+    color: #f4d03f;
+    text-align: center;
+    margin: 0 auto 20px auto;
+    width: 100%;
+    font-size: 2rem; /* 稍微縮小一點點確保不破行 */
+    font-weight: 900;
+    letter-spacing: 4px;
+    /* 重要：補償字距產生的偏左問題 */
+    padding-left: 4px; 
+    text-shadow: 0 0 10px rgba(244, 208, 63, 0.6);
+    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
+    padding-bottom: 15px;
+}
+
+/* 內文 */
+/* 內文 */
+#info-box-text, #extra-info-box-text {
+    flex-grow: 1;
+    overflow-y: auto;
+    color: #ffffff;
+    line-height: 2.0;
+    text-align: center; /* 🌟 改成 center 就可以置中了！ */
+    font-size: 1.3rem;
+    padding-right: 5px;
+}
+
+/* 關鍵：在按鈕上方加上對稱的金色裝飾線 */
+.info-box-content .variant-btn {
+    display: block;
+    background: transparent !important;
+    border: 1px solid #d4af37 !important;
+    color: #d4af37 !important;
+    width: fit-content !important;
+    min-width: 100px;
+    margin: 20px auto 0 !important; /* 置中 */
+    padding: 8px 20px !important;
+    font-size: 1.1rem;
+    border-radius: 4px !important;
+    cursor: pointer;
+    
+    /* 建立按鈕上方的金線 */
+    position: relative;
+    border-top: none; /* 先移除原本按鈕的上邊框，改用偽元素做長線 */
+}
+
+/* 按鈕上方那條跟標題下方一樣長的金線 */
+/* 🌟 完美的底部容器：滿版金線、精準的上下黑色留白 */
+.info-box-footer {
+    width: 100%;
+    margin-top: 20px;  /* 線條與上方內文的黑色距離 */
+    padding-top: 20px; /* 線條與下方按鈕的黑色距離 */
+    border-top: 1px solid rgba(212, 175, 55, 0.4); /* 對稱的頂部滿版金線 */
+    text-align: center;
+    flex-shrink: 0;    /* 確保這塊區域不會被長文字擠壓變形 */
+}
+
+/* 🌟 乾淨的按鈕本體，不再帶有奇奇怪怪的線條 */
+.info-box-content .variant-btn {
+    display: inline-block !important; 
+    background: transparent !important;
+    border: 1px solid #d4af37 !important;
+    color: #d4af37 !important;
+    width: fit-content !important;
+    min-width: 100px;
+    margin: 0 auto !important; 
+    padding: 8px 25px !important;
+    font-size: 1.1rem;
+    border-radius: 4px !important;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.info-box-content .variant-btn:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+}
+
+.info-box-content .variant-btn:hover {
+    background: rgba(212, 175, 55, 0.1) !important;
+}
+
+/* 隱藏捲軸 */
+/* 隱藏捲軸 */
+#info-box-text::-webkit-scrollbar, #extra-info-box-text::-webkit-scrollbar {
+    width: 0px;
+}
+#info-box-text::-webkit-scrollbar-thumb, #extra-info-box-text::-webkit-scrollbar-thumb {
+    background: #d4af37;
+    border-radius: 10px;
+}
+
+/* 關閉按鈕樣式加強 */
+.info-box-content .variant-btn {
+    background: transparent;
+    border: 1px solid #d4af37;
+    margin-top: 20px;
+    width: 100%;
+    padding: 12px 0;
+    font-weight: bold;
+    color: #d4af37;
+    transition: 0.3s;
+}
+
+.info-box-content .variant-btn:hover {
+    background: #d4af37;
+    color: #000;
+}
+
+
+
+/* 牌品專區整體加大 */
+#amulet-gallery {
+    padding: 80px 20px;
+    background: #0a0a0a;
+}
+
+/* 篩選列優化 */
+.gallery-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+    background: rgba(20, 20, 20, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    margin-bottom: 30px;
+}
+
+.filter-container-scroll {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    flex: 1;
+}
+
+.filter-sub-group {
+    display: flex;
+    gap: 12px;
+    padding: 0 15px;
+    border-left: 1px solid #444;
+}
+
+/* 隱藏原生勾選框並自定義 */
+.filter-label input { display: none; }
+
+.filter-label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #aaa;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: 0.3s;
+    white-space: nowrap;
+}
+
+.custom-checkbox {
+    width: 16px;
+    height: 16px;
+    border: 1px solid #d4af37;
+    background: #000;
+    display: inline-block;
+    position: relative;
+}
+
+.filter-label input:checked + .custom-checkbox {
+    background: #d4af37;
+    box-shadow: 0 0 8px #d4af37;
+}
+
+.filter-label input:checked + .custom-checkbox::after {
+    content: '✔';
+    color: #000;
+    font-size: 12px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.filter-label input:checked ~ span:not(.custom-checkbox), 
+.filter-label:hover {
+    color: #d4af37;
+}
+
+.all-label { font-weight: bold; color: #fff; }
+
+
+/* --- 牌品專區 終極修正版：消除白色空白 + 按鈕加大 --- */
+/* --- 刪除這整段 --- */
+.gallery-tabs {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    gap: 35px !important;
+    padding: 25px 30px !important;
+    background: rgba(10, 10, 10, 0.98) !important;
+    border-bottom: 2px solid #d4af37 !important;
+    flex-wrap: nowrap !important;
+    margin-bottom: 25px;
+}
+
+/* 核心：徹底強制殺掉所有原生 checkbox 的白色方塊 */
+.gallery-tabs input[type="checkbox"] {
+    display: none !important;
+    visibility: hidden !important;
+    width: 0 !important;
+    height: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+}
+
+/* 左側功效區：排版更緊湊 */
+.effects-filter-zone {
+    display: flex;
+    flex-direction: column;
+    gap: 6px; 
+    padding-right: 25px;
+    border-right: 1px solid rgba(212, 175, 55, 0.3);
+}
+.effect-row {
+    display: flex;
+    gap: 12px;
+}
+.eff-label {
+    display: flex !important;
+    align-items: center !important;
+    gap: 6px;
+    color: #888;
+    font-size: 1.1rem; /* 稍微調大一點點功效字，避免太小 */
+    cursor: pointer !important;
+    min-width: 70px;
+    margin: 0 !important; /* 消除邊距產生的空白 */
+}
+
+/* 金色自定義方塊 */
+.c-box {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #d4af37;
+    background: transparent;
+    display: inline-block;
+    position: relative;
+    flex-shrink: 0;
+}
+.eff-label input:checked + .c-box { background: #d4af37; box-shadow: 0 0 8px #d4af37; }
+.eff-label input:checked + .c-box::after {
+    content: '✔'; color: #000; font-size: 11px; position: absolute;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+}
+.eff-label input:checked ~ span:not(.c-box) { color: #f4d03f; }
+
+/* 右側：分類按鈕與須知整合區 */
+.category-and-notice-zone {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+.category-btn-zone {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+margin-left: 50px; /* 🌟 新增這行：把整個按鈕區塊往右推。您可以自行修改數值 (如 40px, 80px) 來微調左右位置 */
+}
+
+/* 🌟 分類按鈕與全部標籤：字體明顯加大 */
+/* 🌟 類別按鈕統一外觀樣式 */
+.category-btn-zone .tab-btn {
+    font-size: 1.2rem !important; /* 統一字體大小 */
+    padding: 10px 20px !important; /* 統一內距 */
+    border: 1px solid #333 !important;
+    border-radius: 5px !important;
+    color: #aaa !important;
+    background: rgba(255, 255, 255, 0.02) !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    cursor: pointer !important;
+    min-width: 100px; /* 確保按鈕寬度不會因為文字長度縮得太小 */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 啟動狀態樣式 */
+.category-btn-zone .tab-btn.active, 
+#all-tab-visual.active {
+    color: #f4d03f !important;
+    border-color: #d4af37 !important;
+    background: rgba(212, 175, 55, 0.15) !important;
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.6) !important;
+    font-weight: bold !important;
+}
+
+/* 修正全部按鈕的容器，確保點擊範圍正確 */
+.all-btn-wrapper {
+    display: inline-flex !important;
+    align-items: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    cursor: pointer !important;
+}
+
+/* 展區須知回歸右方 */
+
+/* 展區須知按鈕 - 最終精緻縮小版 */
+.notice-btn-orange {
+    /* 1. 核心大小設定 */
+font-size: 0.95rem !important;   /* 🌟 修改這裡：縮小字體 (原本是 1.2rem，改成 0.95rem) */
+    padding: 5px 12px !important;    /* 🌟 修改這裡：縮小按鈕本體 (原本是 8px 16px，改成 5px 12px) */
+    height: auto !important;
+    min-height: unset !important;
+    
+    /* 2. 位置與間距 */
+    position: static !important;
+    margin-left: auto !important;   /* 強制靠右 */
+    display: inline-flex !important;
+    align-items: center !important;
+    margin-right: 10px !important;
+    
+    /* 3. 視覺設定 */
+    letter-spacing: 1px !important;
+    border-radius: 4px !important;
+    background: rgba(232, 122, 0, 0.1) !important;
+    border: 1px solid #E87A00 !important;
+    color: #FFB347 !important;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.notice-btn-orange:hover {
+    background: rgba(232, 122, 0, 0.85) !important;
+    color: #fff !important;
+    box-shadow: 0 0 10px rgba(255, 179, 71, 0.4);
+    transform: translateY(-1px);
+}
+
+
+/* --- 牌品專區 頁首列與空間精簡版 --- */
+
+/* --- 牌品專區：精鍊一體化 Header 修正 --- */
+
+/* 1. 壓縮彈窗內容的頂部間距，消除臃腫 */
+
+/* 6. 再次瘦身：縮減篩選列的高度與間距 */
+.gallery-tabs {
+    padding: 8px 20px !important;
+    margin-bottom: 15px !important;
+    gap: 25px !important;
+}
+
+/* 手機版適配：確保 Header 不會太擠 */
+/* ==========================================================================
+   七奧閣 - 牌品專區：全新整合式大方框 (2026-04-28 RWD 終極修復版)
+   ========================================================================== */
+
+.gallery-tabs {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: row !important; /* 桌面版：功效在左，按鈕標題在右 */
+    gap: px !important;
+    padding: 13px !important;
+    background: rgba(15, 15, 15, 0.95) !important;
+    border: 1px solid rgba(212, 175, 55, 0.4) !important;
+    border-radius: 12px !important;
+    margin-bottom: 30px !important;
+    width: 100% !important;
+}
+
+/* 標題與叉叉的整合行 */
+.top-row-integrated {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* 牌品專區標題：已修正 RWD 位移問題 */
+.modal-title-in-box {
+    color: #f4d03f !important;
+    font-size: 2.2rem !important;
+    letter-spacing: 8px !important;
+    font-weight: 900 !important;
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.3);
+    border: none !important; 
+    padding: 0 !important;
+    margin: 0 !important;
+    text-align: center;
+    width: 100%;
+    /* 🌟 修正：手機版不可使用固定位移，改由容器 Flex 置中 */
+    transform: none !important; 
+}
+
+/* 叉叉按鈕：固定定位於大方框右上角 */
+.close-modal-in-box {
+    position: absolute !important;
+    top: 25px !important;
+    right: 30px !important;
+    color: #d4af37 !important;
+    font-size: 35px !important;
+    cursor: pointer !important;
+    line-height: 1 !important;
+    z-index: 100;
+    transition: 0.3s;
+}
+.close-modal-in-box:hover { color: #fff; transform: scale(1.1); }
+
+/* 右側區域垂直排列 */
+.category-and-notice-zone {
+    display: flex !important;
+    flex-direction: column !important;
+    flex-grow: 1 !important;
+}
+
+.bottom-row-integrated {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+}
+
+@media (max-width: 768px) {
+    /* 1. 拓寬主體框：左右留白縮小，爭取最大顯示寬度 */
+    .gallery-modal .modal-content {
+        width: 96% !important;
+        padding: 15px 10px 10px 10px !important; 
+    }
+
+    /* 2. 牌品專區大方框：變更為垂直排列，壓縮內距並加上邊框 */
+    .gallery-tabs {
+        position: relative !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 15px 10px 10px 10px !important;
+        margin-bottom: 8px !important;
+        border-radius: 8px !important;
+        border: 1px solid rgba(212, 175, 55, 0.4) !important;
+        gap: 5px !important; /* 🌟 殺掉電腦版 40px 黑色大洞的真凶 */
+    }
+
+    /* 控制上下順序：分類與標題在上 (1)，功效勾選在下 (2) */
+    .category-and-notice-zone {
+        order: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    .bottom-row-integrated {
+        display: block !important;
+        width: 100% !important;
+    }
+
+    /* 3. 標題與功能行：標題居中 */
+    .top-row-integrated {
+        display: flex !important;
+        justify-content: center !important; 
+        align-items: center !important;
+        height: 30px !important;
+        margin-bottom: 15px !important;
+        width: 100% !important;
+    }
+
+    .modal-title-in-box {
+        font-size: 1.4rem !important;
+        letter-spacing: 5px !important;
+        margin: 0 !important;
+        transform: none !important; 
+    }
+
+    /* 叉叉按鈕：固定在大方框最右上角 */
+    .close-modal-in-box {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        font-size: 32px !important;
+        z-index: 3000 !important;
+        transform: none !important;
+    }
+
+    /* 🌟 展區須知：往下挪一點點，跟標題貼齊 */
+    .notice-btn-orange {
+        position: absolute !important;
+        top: 17.5px !important; /* 🌟 原本是 15px，改大一點讓它往下掉跟標題對齊。若覺得不夠低可以改 22px */
+        right: 45px !important;
+        transform: none !important;
+        font-size: 0.75rem !important;
+        padding: 4px 8px !important;
+        width: auto !important;
+        margin: 0 !important;
+        border-radius: 4px !important;
+    }
+
+    /* 4. 分類按鈕區：緊湊一排，平均分配欄寬 */
+    .category-btn-zone {
+        display: flex !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+        border-top: none !important;
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+        gap: 4px !important;
+    }
+
+    .category-btn-zone .tab-btn {
+        flex: 1 !important; /* 左右拓寬平均分配 */
+        font-size: 0.85rem !important;
+        padding: 6px 0 !important;
+        margin: 0 !important;
+        min-width: unset !important;
+        text-align: center !important;
+        border: 1px solid #333 !important;
+    }
+
+    /* 5. 功效過濾區：採用 Grid 網格系統 (完美 5 列) */
+    .effects-filter-zone {
+        order: 2 !important; 
+        display: grid !important;
+        grid-template-columns: repeat(5, 1fr) !important; /* 絕對強制切成 5 列 */
+        gap: 12px 2px !important; /* 上下行距 12px，左右間距 2px */
+        align-content: start !important;
+        width: 100% !important;
+        border: none !important;
+        padding: 2px !important;
+        margin-top: 5px !important; /* 🌟 原本 15px，縮小以消除空白 */
+        margin-bottom: 5px !important;
+        max-height: 75px !important; /* 確保精準露出兩行的高度 */
+        overflow-y: auto !important; /* 超過兩行自動出現上下拉捲軸 */
+        overflow-x: hidden !important; 
+    }
+
+    /* 捲軸美化 (讓上下拉更直覺) */
+    .effects-filter-zone::-webkit-scrollbar { width: 4px; }
+    .effects-filter-zone::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.7); border-radius: 5px; }
+
+    .effect-row {
+        display: contents !important; /* 打破 HTML 中每 3 個一包的限制 */
+    }
+
+    .eff-label {
+        min-width: unset !important; /* 解除電腦版 70px 限制，防止字被擠出螢幕 */
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        box-sizing: border-box !important;
+        font-size: 0.75rem !important; 
+        margin: 0 !important;
+        padding: 0 !important;
+        white-space: nowrap !important;
+        color: #888 !important;
+        gap: 3px !important;
+    }
+
+    /* 微調金色小方塊，適應緊湊空間 */
+    .c-box {
+        flex-shrink: 0 !important; /* 防止方塊變形 */
+        width: 12px !important;
+        height: 12px !important;
+    }
+    .eff-label input:checked + .c-box::after {
+        font-size: 9px !important;
+    }
+
+    /* 6. 介紹框：解決「鑿壁偷光」問題，拉高文字面積 */
+    .info-box-916 {
+        width: 92vw !important;
+        height: 75vh !important;    
+        max-height: 650px !important;
+        padding: 25px 20px !important;
+    }
+
+    #info-box-text, #extra-info-box-text {
+        height: calc(100% - 110px) !important;
+        font-size: 1.15rem !important;
+        line-height: 1.8 !important;
+    }
+
+    /* 7. 聖物展示區：釋放垂直高度，圖示縮小露出更多聖物 */
+    #items-container {
+        height: calc(100vh - 220px) !important; 
+        padding-top: 5px !important;
+    }
+
+    #items-container .gallery-item {
+        flex: 0 0 calc((100% - 10px) / 2) !important;
+        max-width: calc((100% - 10px) / 2) !important;
+        margin-bottom: 10px !important;
+    }
+
+    #items-container .gallery-item img {
+        height: 135px !important; 
+    }
+}/* 捲軸美化 (金色風格) */
+#notice-popup #info-box-text::-webkit-scrollbar { width: 5px; }
+#notice-popup #info-box-text::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; } 
+
+/* ==========================================================================
+   牌品專區 - 圖片下方文字擴充 (最終完美版)
+   ========================================================================== */
+/* 1. 解除原本外層卡片的限制，讓文字能顯示在下方空隙 */
+#items-container .gallery-item {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    overflow: visible !important;
+margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離，數值越小越近 */
+}
+
+/* 2. 建立全新的圖片保護殼，並加上原本的金框與圓角 */
+.item-img-wrapper {
+    position: relative !important; /* 🌟 絕對關鍵：死死鎖住黑色遮罩，不讓它往下掉 */
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    background: #000;
+    transition: all 0.3s ease;
+}
+
+/* 3. 完美還原原本的 Hover 亮金框特效 */
+#items-container .gallery-item:hover .item-img-wrapper {
+    border-color: #d4af37 !important;
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.6) !important;
+}
+
+/* 4. 下方排品名稱與價格的文字樣式 */
+.item-price-bar {
+    color: #d4af37;
+    font-size: 1.1rem;
+    margin-top: 8px;
+    text-align: center;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* 手機版微調 */
+@media (max-width: 768px) {
+    .item-price-bar {
+        font-size: 0.95rem;
+        margin-top: 5px;
+    }
+}
+/* 展區須知：大標題與符號金色特效 */
+#notice-popup #info-box-text strong {
+    color: #f4d03f !important; /* 明亮的金色 */
+    text-shadow: 0 0 15px rgba(212, 175, 55, 0.8), 0 0 5px rgba(255, 255, 255, 0.2) !important;
+    font-size: 1.25rem !important;
+    letter-spacing: 2px !important;
+    display: inline-block;
+    /* 加入呼吸燈特效，讓文字有靈動感 */
+    animation: golden-text-glow 2.5s infinite ease-in-out;
+}
+
+/* 讓前面的 ◈ 符號也同步發光 */
+#notice-popup #info-box-text span {
+    text-shadow: 0 0 12px rgba(212, 175, 55, 0.9) !important;
+    animation: golden-text-glow 2.5s infinite ease-in-out;
+}
+
+/* 定義金色呼吸燈動畫 */
+@keyframes golden-text-glow {
+    0%, 100% { 
+        text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+        filter: brightness(1);
+    }
+    50% { 
+        text-shadow: 0 0 20px rgba(244, 208, 63, 1), 0 0 30px rgba(212, 175, 55, 0.4);
+        filter: brightness(1.2);
+    }
+}
+
+/* 統一讓上方文章區與下方宣言框的 strong (粗體字) 都變成發光金色 */
+.text-block strong,
+.manifesto-box strong {
+    color: #f4d03f !important;
+    text-shadow: 0 0 10px rgba(244, 208, 63, 0.5) !important;
+    font-weight: bold !important;
+}
+
+/* 1. 隱藏原本的菱形符號 */
+.rules-container .rules-list li::before {
+    display: none !important; 
+}
+
+/* 修正鐵律與需知區塊：防止文字重疊並維持縮排 */
+.rules-container .rules-list li {
+    position: relative !important;
+    padding-left: 0 !important; /* 歸零原本的推擠 */
+    margin-bottom: 1.2rem !important;
+    display: block !important;
+}
+
+/* 修正金字標題：取消絕對定位，改用 inline-block 確保不重疊 */
+.rules-container .rules-list li > strong:first-child {
+    position: relative !important; /* 🌟 關鍵：改成 relative 就不會疊在一起 */
+    display: inline-block !important;
+    left: 0 !important;
+    color: #f4d03f !important;
+    margin-right: 5px !important; /* 標題跟後面文字的間距 */
+    vertical-align: top !important;
+}
+
+
+
+</style>
 </head>
 <body>
     <nav class="no-select">
@@ -1246,7 +2771,7 @@
                 <div class="text-block" style="border-top: 1px solid rgba(212, 175, 55, 0.4); padding-top: 2rem; margin-top: 1rem;">
                     <p class="quote-text">「以法制厄，轉禍為祥。運用法力強效扭轉運勢。」</p>
 
-                    <p style="text-align: justify;">兩位師父皆傳承頂尖法脈，除了討債和倒楣法事，皆使用"正法"替善信加持，能為您進行深層的磁場清理與運勢重啟，<strong>皆能針對您的困境對症下藥，幫助善信清理長期的運勢停滯。</strong></p>
+                    <p style="text-align: justify;">兩位師父皆傳承頂尖法脈，除了討債和倒楣法事，皆使用"正法"替善信加持，能為您進行深層的磁場清理與運勢重啟，皆能針對您的困境對症下藥，幫助善信<strong>清理長期的運勢停滯。</strong></p>
 
                     <div style="text-align: center; margin: 20px 0;">
                         <button class="variant-btn" onclick="toggleContent('more-srv6-content', this, '展開專項法事與報價 ▼', 'srv6')" style="padding: 8px 25px; font-size: 1rem;">展開專項法事與報價 ▼</button>
@@ -1254,42 +2779,16 @@
 
                     <div id="more-srv6-content" style="display: none; animation: fadeIn 0.8s ease;">
                         <div class="sub-title">▍七奧閣專項法事體系</div>
-<ul class="info-list ritual-list"> <li>
+                        <ul class="info-list">
+                            <li><strong>【除霉 ‧ 淨化 ‧ 解厄】：</strong> 包含正統沖花涼儀軌。針對運勢極差、犯拉胡、甚至近期頻繁遭遇意外者，進行除霉洗刷、貼金招運、蓋白布以及送拉胡等全方位儀軌，徹底清空磁場垃圾，重啟新生好運。<span style="color: #f4d03f;">(阿贊七:6,600/次、奧利弗: 4,600 / 次。視情況可附加貼金招運+3,000、犯拉胡蓋白布+6,000、送拉胡+6000)</span></li>
+                            <li><strong>【財運 ‧ 事業 ‧ 貴人】：</strong> 強力催旺正偏財氣，勾連八方財脈與商戰機遇。引聚生命中的貴人出現，協助您突破事業瓶頸、讓業績爆發，為衝刺事業建立最強大的能量底氣。<span style="color: #f4d03f;">(阿贊七:6,600/次、奧利弗: 4,600 / 次。</span></li>
+                            <li><strong>【人緣 ‧ 魅力 ‧ 桃花】：</strong> 深度拉升個人磁場的吸引力與頻率，廣結善緣、廣開人際網絡。讓您在社交、職場或任何環境中皆能極具魅力，獲得長官與客戶的青睞，催旺優質桃花。<span style="color: #f4d03f;">(阿贊七:6,000/次、奧利弗: 4,000 / 次。</span></li>
+                            <li><strong>【感情穩定 ‧ 合和鎖心】：</strong> 針對感情僵局、關係裂痕或需要穩定愛情者進行深層和合。增進伴侶間的頻率契合與依戀感，化解誤會，排除外界干擾，守護長久穩定的幸福。<span style="color: #f4d03f;">(阿贊七:6,600/次、奧利弗: 4,600 / 次。</span></li>
+                            <li><strong>【祈福安康  ‧  功德迴向】：</strong> 提供針對個人的健康祈福法事，並透過師父法脈進行正統的功德迴向。為您或家中尊長積累深厚的福報資糧，由內而外調和能量，守護出入平安。<span style="color: #f4d03f;">(阿贊七:8,500/次、奧利弗: 6,500 / 次。</span></li>
+                            <li><strong>【雷霆制裁 ‧ 小人倒霉】：</strong> 這是一場為公道而戰的法門。針對曾惡意冒犯、背地陷害、欺凌或試圖阻礙您前程的小人進行強力回擊。運用法門能量使其運勢頹敗、自食其果，讓加害者再無心力作祟。<span style="color: #f4d03f;">(阿贊七:6,600/次、奧利弗: 4,600 / 次。</span></li>
+                            <li><strong>【追債索償 ‧ 奪運抵債】：</strong> 針對惡意拖欠大額款項、甚至大言不慚<span style="color: #FF9800;">「要錢沒有，爛命一條」</span>的老賴。法門將先施加極大靈性威壓，迫使對方主動歸還欠款；若對方真至山窮水盡或冥頑不靈，法脈將強制剝奪其陽壽與殘存運勢，將之轉化為您的福報與資源。<span style="color: #f4d03f;">(阿贊七: 6,600 / 次、奧利弗: 4,600 / 次)</span></li>
+                        </ul>
 
-        <strong>【除霉 ‧ 淨化 ‧ 解厄】：</strong> 
-        <span class="desc">包含正統沖花涼儀軌。針對運勢極差、犯拉胡、甚至近期頻繁遭遇意外者，進行除霉洗刷、貼金招運、蓋白布以及送拉胡等全方位儀軌，徹底清空磁場垃圾，重啟新生好運。<span style="color: #f4d03f;"><br>(阿贊七:6,600/次、奧利弗: 4,600 / 次。視情況可附加貼金招運+3,000、犯拉胡蓋白布+6,000、送拉胡+6000)</span></span>
-    </li>
-    
-    <li>
-        <strong>【財運 ‧ 事業 ‧ 貴人】：</strong> 
-        <span class="desc">強力催旺正偏財氣，勾連八方財脈與商戰機遇。引聚生命中的貴人出現，協助您突破事業瓶頸、讓業績爆發，為衝刺事業建立最強大的能量底氣。<span style="color: #f4d03f;"><br>(阿贊七:6,600/次、奧利弗: 4,600 / 次。)</span></span>
-    </li>
-    
-    <li>
-        <strong>【人緣 ‧ 魅力 ‧ 桃花】：</strong> 
-        <span class="desc">深度拉升個人磁場的吸引力與頻率，廣結善緣、廣開人際網絡。讓您在社交、職場或任何環境中皆能極具魅力，獲得長官與客戶的青睞，催旺優質桃花。<span style="color: #f4d03f;"><br>(阿贊七:6,000/次、奧利弗: 4,000 / 次。)</span></span>
-    </li>
-    
-    <li>
-        <strong>【感情穩定 ‧ 合和鎖心】：</strong> 
-        <span class="desc">針對感情僵局、關係裂痕或需要穩定愛情者進行深層和合。增進伴侶間的頻率契合與依戀感，化解誤會，排除外界干擾，守護長久穩定的幸福。<span style="color: #f4d03f;"><br>(阿贊七:6,600/次、奧利弗: 4,600 / 次。)</span></span>
-    </li>
-    
-    <li>
-        <strong>【祈福安康  ‧  功德迴向】：</strong> 
-        <span class="desc">提供針對個人的健康祈福法事，並透過師父法脈進行正統的功德迴向。為您或家中尊長積累深厚的福報資糧，由內而外調和能量，守護出入平安。<span style="color: #f4d03f;"><br>(阿贊七:8,500/次、奧利弗: 6,500 / 次。)</span></span>
-    </li>
-    
-    <li>
-        <strong>【雷霆制裁 ‧ 小人倒霉】：</strong> 
-        <span class="desc">這是一場為公道而戰的法門。針對曾惡意冒犯、背地陷害、欺凌或試圖阻礙您前程的小人進行強力回擊。運用法門能量使其運勢頹敗、自食其果，讓加害者再無心力作祟。<span style="color: #f4d03f;"><br>(阿贊七:6,600/次、奧利弗: 4,600 / 次。)</span></span>
-    </li>
-    
-    <li>
-        <strong>【追債索償 ‧ 奪運抵債】：</strong> 
-        <span class="desc">針對惡意拖欠大額款項、甚至大言不慚<span style="color: #FF9800;">「要錢沒有，爛命一條」</span>的老賴。法門將先施加極大靈性威壓，迫使對方主動歸還欠款；若對方真至山窮水盡或冥頑不靈，法脈將強制剝奪其陽壽與殘存運勢，將之轉化為您的福報與資源。<span style="color: #f4d03f;"><br>(阿贊七: 6,600 / 次、奧利弗: 4,600 / 次)</span></span>
-    </li>
-</ul>
                         <div class="rules-container">
                             <h4 class="rules-header">◈ 師父選擇提示</h4>
                             <ul class="rules-list">
@@ -2789,48 +4288,13 @@
         </div>
     </div>
 </div><script>
-
-document.addEventListener('DOMContentLoaded', () => {
-    const prevBtn = document.querySelector('.prev-arrow');
-    const nextBtn = document.querySelector('.next-arrow');
-    const heroSlides = document.querySelectorAll('.slide-layer');
-    let currentIdx = 0;
-
-    function showSlide(index) {
-        heroSlides.forEach(s => s.classList.remove('active'));
-        heroSlides[index].classList.add('active');
-    }
-
-    if (prevBtn && nextBtn) {
-        prevBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentIdx = (currentIdx - 1 + heroSlides.length) % heroSlides.length;
-            showSlide(currentIdx);
-        });
-
-        nextBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            currentIdx = (currentIdx + 1) % heroSlides.length;
-            showSlide(currentIdx);
-        });
-    }
-});
-
     /* ==========================================================================
        1. 基礎功能 (導覽列、彈窗)
        ========================================================================== */
-  function toggleMenu() {
+    function toggleMenu() {
         const navLinks = document.getElementById('navLinks');
-        const body = document.body; // 抓取 body
-        
         navLinks.classList.toggle('active');
-        
-        // 關鍵修正：切換選單時同步切換 no-scroll 類名
-        if (navLinks.classList.contains('active')) {
-            body.classList.add('no-scroll');
-        } else {
-            body.classList.remove('no-scroll');
-        }
+        document.body.classList.toggle('no-scroll');
     }
 
 function openItemGallery() { 
