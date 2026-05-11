@@ -2779,6 +2779,57 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
 
             </div> 
         </section>
+
+<section id="srv5">
+            <h2 class="no-select">靈王求願</h2>
+            
+            <div id="overlay-srv5" class="warning-overlay">
+                <div class="warning-modal">
+                    <p>本區域由於特殊關係，暫不開放，<br>若有迫切重大需求，請私訊官方LINE</p>
+                    <div class="warning-btns">
+                        <button class="warning-btn btn-skip" onclick="skipSection('srv5')">跳過本區</button>
+                        <button class="warning-btn btn-visit" onclick="dismissOverlay('srv5')">仍要參觀</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content no-select">
+                <div class="text-block">
+                    <h3 class="text-center" style="font-size: 1.8rem;">【 靈王求願 】"知你所求、應你所願"</h3>
+                    <p class="text-center" style="color: #d4af37; font-size: 1.2rem; margin-bottom: 1.5rem; letter-spacing: 2px; font-weight: bold;">—— 恭請皮烹王眾協助，破除現實枷鎖的至高力量 ——</p>
+                    
+                    <div class="img-wrapper-bordered">
+                        <img src="靈王求願.jpg" alt="靈王求願">
+                        <div class="image-caption">求願參考示意圖</div>
+                    </div><br>
+
+                    <p style="text-align: justify;">  當世俗的努力觸及天花板，當現實的困局難以單憑人力扭轉，「靈王求願」將為您勾連法界中具備至高位階的強大力量，<br>
+                        以法脈契約之名，破除枷鎖，達成心之所向。<br>「靈王求願」是七奧閣最高階的成願儀軌之一。不同於一般的加持，此法門直接勾連法界中具備權威位階的靈王，以強大的靈威介入供主的現實運勢，協助打破長期停滯的困局。這不僅是一場法事，更是一份莊嚴的法脈契約。</p>
+
+                    <div class="sub-title">▍法門核心重點</div>
+                    <ul class="info-list">
+                        <li><strong>【儀式本質】：</strong> 透過師父深厚功力與法脈連結，直接恭請皮烹王眾協助，針對善信的特定目標注入強大且直接的推動力。</li>
+                        <li><strong>【適用情況】：</strong> 適合面臨人生重大轉折、長期事業停滯、或是擁有極其強烈且急迫的具體願望（如：重大合約、大型債務化解、逆天改運等）。</li>
+                        <li><strong>【執行流程】：</strong> 此為一對一專屬法事。需提供供主詳細資訊，由師父擇吉日開壇，在皮烹王眾與法脈阿贊的見證下完成這份成願契約。</li>
+			<li><strong>【求願報價】：</strong> 靈王求願 <span style="color: #f4d03f;">NT$ 5,000 起 /次</span>。</li>
+
+                    </ul>
+                    
+                    <div class="rules-container">
+                        <h4 class="rules-header">◈ 求願需知：因果鐵律</h4>
+                        <ul class="rules-list">
+                            <li><strong>【成願機遇與因果定數】：</strong> 靈王求願具備強大的爆發推力，若順利契合，能為善信在短時間內帶來龐大機遇與所求之物。然而，法界運作皆有定數，本閣堅持正信，絕不作「百分之百必定成功」之虛假保證。</li>
+                            <li><strong>【嚴守信用與違誓代價】：</strong> 求願皆有明確的「時效性」。若於約定時限內未見成願，代表緣分或時機未到，供主無須進行任何後續處理。但若順利成願，請務必、絕對要依照當初承諾的條件與時間還願！ 皮烹王眾極度看重「信用」，若過河拆橋或刻意毀諾，必將承受來自法脈的嚴厲懲罰與反噬。</li>
+                            <li><strong>【願力相稱與因果守恆】：</strong> 法術是推力，而非無中生有。若所求之願望過於龐大，遠超自身命盤原本可負荷的極限，等同於在透支未來的福報。強行成願不僅可能需要付出高昂的代價，甚至會導致後續整體運勢劇烈下滑。萬物皆有因果，切勿盲目貪求。</li>
+                            <li><strong>【審慎評估與事前諮詢】：</strong> 為了保護善信，所有求願皆須經過嚴格的事前審估。請務必先與阿贊師父進行詳細諮詢，確認您的願望是否合理、安全，且符合自身因果的承載力，確認無虞後方可開壇求願。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </section>
+
+
+
         <section id="srv6">
             <h2 class="no-select">轉運法事</h2>
             <div class="content no-select">
@@ -4340,9 +4391,11 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
 let scrollY = 0; // 記錄捲動位置
 
 // 輔助函式：徹底攔截觸控事件
+// 如果目前的設定還有極細微晃動，才改用這個更嚴格的判斷：
 function lockTouch(e) {
-    // 如果滑動的目標不是選單本身，就禁止滑動
-    if (!e.target.closest('#navLinks')) {
+    // 判斷是否為選單內，如果是選單內且選單有捲軸，則允許滑動
+    const navLinks = document.getElementById('navLinks');
+    if (!navLinks.contains(e.target)) {
         e.preventDefault();
     }
 }
