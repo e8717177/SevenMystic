@@ -370,16 +370,20 @@ overflow-x: hidden; /* 🌟 加入這行 */
 .prev-arrow { left: 0; }
 .next-arrow { right: 0; }
 /* 只有電腦滑鼠移過去才變白色，手機點擊不卡色 */
+/* 電腦版：滑鼠移過變白 */
 @media (hover: hover) {
     .prev-arrow:hover, .next-arrow:hover { 
         color: white !important; 
     }
 }
 
-/* 點擊的瞬間閃一下白色，放開後立刻恢復金色 */
+/* 手機與電腦通用：點擊瞬間變白 + 縮小（這才有動畫感） */
 .prev-arrow:active, .next-arrow:active {
     color: white !important;
-    transition: 0.1s;
+    /* 加入 scale(0.85) 讓按鈕有被按下去的感覺 */
+    /* 必須加上 translateY(-50%) 否則按鈕會跑位 */
+    transform: translateY(-50%) scale(0.85) !important;
+    transition: 0.1s !important;
 }
 
 /* 保留你原本的底框樣式 */
@@ -2037,8 +2041,8 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
         flex-direction: column !important;
         align-items: center !important;
         justify-content: center !important;
-        flex-grow: 1 !important;
-        margin: 0 5px !important;
+padding-right: 25px !important; 
+        margin: 0 !important;
     }
 
     /* 直接引用你 chapter-header h1 的金色漸層與發光特效 */
@@ -2072,6 +2076,17 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
         z-index: 10 !important;
     }
 }
+
+/* --- 修正處：消除輪播圖框線，直接融合背景 --- */
+    .hero-image-wrapper, .slider-container, .hero {
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+    }
+    
+    .slide-layer {
+        border: none !important;
+    }
 
 </style>
 </head>
