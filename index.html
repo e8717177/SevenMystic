@@ -1151,13 +1151,12 @@ body {
 }/* ==========================================================================
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
-/* 找到你 CSS 中的 .no-scroll 並修改如下 */
-html.no-scroll, body.no-scroll { 
-    overflow: hidden !important; 
-    height: 100% !important; 
+html.no-scroll, body.no-scroll {
+    overflow: hidden !important;
+    height: 100% !important;
     width: 100% !important;
-    position: fixed !important; /* 🌟 這是關鍵，防止底層被滑動 */
-    top: var(--scroll-y);       /* 🌟 配合 JS 記錄位置，防止畫面上跳 */
+    position: fixed !important; /* 🌟 確保這一行有加 */
+    top: var(--scroll-y);
 }
 
 @media (max-width: 768px) {
@@ -1994,7 +1993,25 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
     vertical-align: top !important;
 }
 
+/* 🌟 徹底解決箭頭點擊後白色殘留問題 */
+.prev-arrow, .next-arrow {
+    /* 1. 防止手機點擊時產生預設的半透明灰色/藍色底色 */
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+}
 
+/* 2. 只有在電腦版（滑鼠）才觸發 hover 效果 */
+@media (hover: hover) {
+    .prev-arrow:hover, .next-arrow:hover {
+        color: white; /* 原本的白色效果只留給滑鼠 */
+    }
+}
+
+/* 3. 手機版專屬：點擊時「閃一下」就消失 */
+.prev-arrow:active, .next-arrow:active {
+    color: white !important; /* 手指壓下去那一刻變白 */
+    opacity: 0.5;           /* 增加點擊感，放開就消失 */
+}
 
 </style>
 </head>
@@ -4317,8 +4334,18 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
     /* ==========================================================================
        1. 基礎功能 (導覽列、彈窗)
        ========================================================================== */
-   /* 將原本的 toggleMenu 換成這段： */
+/* ==========================================================================
+   1. 導覽列與背景鎖定邏輯 (修正版：徹底解決 iOS 背景滑動)
+   ========================================================================== */
 let scrollY = 0; // 記錄捲動位置
+
+// 輔助函式：徹底攔截觸控事件
+function lockTouch(e) {
+    // 如果滑動的目標不是選單本身，就禁止滑動
+    if (!e.target.closest('#navLinks')) {
+        e.preventDefault();
+    }
+}
 
 function toggleMenu() {
     const navLinks = document.getElementById('navLinks');
@@ -4332,6 +4359,9 @@ function toggleMenu() {
         document.body.classList.add('no-scroll');
         document.documentElement.classList.add('no-scroll');
         navLinks.classList.add('active');
+
+        // 🌟 核心修正：強制攔截所有會傳導到底層的滑動事件
+        document.addEventListener('touchmove', lockTouch, { passive: false });
     } else {
         // 【關閉選單】
         document.body.classList.remove('no-scroll');
@@ -4342,12 +4372,18 @@ function toggleMenu() {
         window.scrollTo(0, scrollTarget);
         
         navLinks.classList.remove('active');
+
+        // 🌟 核心修正：移除觸控攔截
+        document.removeEventListener('touchmove', lockTouch);
     }
 }
 
+/* ==========================================================================
+   2. 牌品專區與其他功能 (維持原有邏輯)
+   ========================================================================== */
 function openItemGallery() { 
-    document.getElementById('item-gallery-modal').style.display = 'block'; 
-    document.body.style.overflow = 'hidden'; 
+    document.getElementById('item-gallery-modal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
 
     // 檢查本次開啟網頁是否已經看過須知
     if (!sessionStorage.getItem('hasReadNotice')) {
@@ -4357,27 +4393,29 @@ function openItemGallery() {
         }, 300);
     }
 }
-    function closeItemGallery() { 
-        document.getElementById('item-gallery-modal').style.display = 'none'; 
-        document.body.style.overflow = 'auto'; 
-    }
+
+function closeItemGallery() { 
+    document.getElementById('item-gallery-modal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
 
 function openNotice() { 
-    document.getElementById('notice-popup').style.display = 'block'; 
-}
-function closeNotice() { 
-    document.getElementById('notice-popup').style.display = 'none'; 
+    document.getElementById('notice-popup').style.display = 'block';
 }
 
-    function openMasterTab(evt, masterId) {
-        const section = evt.currentTarget.closest('.content');
-        const tabs = section.getElementsByClassName("master-content");
-        const btns = section.getElementsByClassName("tab-btn");
-        for (let i = 0; i < tabs.length; i++) tabs[i].style.display = "none";
-        for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
-        document.getElementById(masterId).style.display = "block";
-        evt.currentTarget.classList.add("active");
-    }
+function closeNotice() { 
+    document.getElementById('notice-popup').style.display = 'none';
+}
+
+function openMasterTab(evt, masterId) {
+    const section = evt.currentTarget.closest('.content');
+    const tabs = section.getElementsByClassName("master-content");
+    const btns = section.getElementsByClassName("tab-btn");
+    for (let i = 0; i < tabs.length; i++) tabs[i].style.display = "none";
+    for (let i = 0; i < btns.length; i++) btns[i].classList.remove("active");
+    document.getElementById(masterId).style.display = "block";
+    evt.currentTarget.classList.add("active");
+}
 
    /* ==========================================================================
    2. 核心篩選邏輯 (終極無Bug版：嚴格交集 + 狀態絕對獨立)
@@ -4608,13 +4646,18 @@ function closeNotice() {
     // 🌟 啟動五秒自動播放
     if(slides.length > 0) heroTimer = setInterval(goNextSlide, 5000);
 
-    // 🌟 新增手動切換函數：搭配 HTML 的 onclick 事件
-    function changeSlide(step) {
-        clearInterval(heroTimer); // 先清除計時器，避免剛手動點完又馬上自動跳下一張
-        currentHeroIndex = (currentHeroIndex + step + slides.length) % slides.length;
-        slides.forEach((s,i) => s.classList.toggle('active', i === currentHeroIndex));
-        heroTimer = setInterval(goNextSlide, 5000); // 重新啟動五秒計時
+function changeSlide(step) {
+    clearInterval(heroTimer);
+    currentHeroIndex = (currentHeroIndex + step + slides.length) % slides.length;
+    slides.forEach((s,i) => s.classList.toggle('active', i === currentHeroIndex));
+    
+    // 🌟 關鍵：點完後立刻讓按鈕失去焦點，防止白色背景殘留
+    if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
     }
+    
+    heroTimer = setInterval(goNextSlide, 5000);
+}
 
     function toggleAccordion(button) {
         const item = button.parentElement;
