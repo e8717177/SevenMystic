@@ -15,7 +15,7 @@
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://sevenmystic.tw/webdoor.jpg"> 
 
-    <link rel="icon" type="image/png" href="favicon.jpg">
+    <link rel="icon" type="image/png" href="favicon.png">
     
     <style>
     /* ... 下面是您原本的 CSS 樣式，完全不用動 ... */
@@ -53,6 +53,7 @@ a, button, .tab-btn, .gallery-item, .prev-arrow, .next-arrow, .accordion-header,
         html {
             scroll-behavior: smooth;
             scroll-padding-top: 180px; 
+	  overflow-x: hidden; /* 🌟 加入這行 */
         }
 
 body {
@@ -61,6 +62,8 @@ body {
     color: #e8e8e8;
     line-height: 1.8; /* 稍微增加行高，文字放大後才不會太擠 */
     font-size: 1.2rem; /* 修改這裡：原預設約1rem，調至1.2rem即放大20% */
+overflow-x: hidden; /* 🌟 加入這行 */
+    width: 100%;       /* 🌟 確保寬度鎖死在 100% */
 }
 
         main {
@@ -255,23 +258,31 @@ body {
             text-shadow: 0 0 12px rgba(255, 179, 71, 0.7);
         }
 
-        @media (max-width: 768px) {
-
-.slide-layer {
-        background-size: contain !important; /* 確保完整顯示，不裁切 */
-        background-position: top center !important; /* 靠上置中 */
-    }
-    
-    .hero {
-        min-height: 50vh !important; /* 縮小輪播區塊的高度，避免下方一大片黑 */
-        padding-top: 80px !important; 
-    }
-    
-    .slider-container {
-        top: 80px !important;
-        height: calc(100% - 80px) !important;
-    }
-
+@media (max-width: 768px) {
+            /* --- 手機版首頁比例核心修正 --- */
+            .hero {
+                min-height: unset !important;
+                height: auto !important;
+                padding-top: 80px !important;
+                display: block !important;
+            }
+            /* 直立時：2:3 比例並填滿 */
+            @media (orientation: portrait) {
+                .hero { aspect-ratio: 2 / 3 !important; }
+                .slide-layer { background-size: cover !important; }
+            }
+            /* 橫向時：16:9 比例 */
+            @media (orientation: landscape) {
+                .hero { aspect-ratio: 16 / 9 !important; }
+                .slide-layer { background-size: cover !important; }
+            }
+            .slider-container {
+                position: relative !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+            }
+            /* --- 保持原本的導覽列設定 --- */
             .nav-links {
                 position: fixed;
                 right: -100%;
@@ -281,7 +292,7 @@ body {
                 width: 100%;
                 text-align: center;
                 transition: 0.3s;
-                padding: 2rem 0;
+                padding: 2rem 0 5rem 0;
                 border-top: 2px solid #d4af37;
                 z-index: 999;
                 height: calc(100vh - 80px);
@@ -358,7 +369,18 @@ body {
 
 .prev-arrow { left: 0; }
 .next-arrow { right: 0; }
-.prev-arrow:hover, .next-arrow:hover { color: white; }
+/* 只有電腦滑鼠移過去才變白色，手機點擊不卡色 */
+@media (hover: hover) {
+    .prev-arrow:hover, .next-arrow:hover { 
+        color: white !important; 
+    }
+}
+
+/* 點擊的瞬間閃一下白色，放開後立刻恢復金色 */
+.prev-arrow:active, .next-arrow:active {
+    color: white !important;
+    transition: 0.1s;
+}
 
 /* 保留你原本的底框樣式 */
 .hero-bottom-frame {
@@ -1995,12 +2017,59 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
 
 
 
+/* --- 手機版標頭文字控制 --- */
+/* 預設隱藏（桌機版不顯示） */
+.mobile-header-text-box {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* 手機版開啟並置中 */
+    .mobile-header-text-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1; /* 佔滿 LOGO 與漢堡選單中間的空間 */
+        z-index: 1001;
+    }
+
+    /* 調整原本容器的排列方式 */
+    .nav-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* 引用 chapter-header h1 的金色規格並縮放大小 */
+    .mobile-header-text-box .chapter-header h1 {
+        font-size: 1rem !important; /* 縮小以符合標頭高度 */
+        letter-spacing: 2px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1.3 !important;
+        /* 直接繼承你原本定義的漸層與發光效果 */
+    }
+    
+    /* 修正 LOGO 與漢堡選單的彈性，讓中間文字有空間 */
+    .logo, .menu-toggle {
+        flex-shrink: 0;
+    }
+}
+
 </style>
 </head>
 <body>
     <nav class="no-select">
         <div class="nav-container">
             <img src="門面.png" alt="七奧閣" class="logo">
+
+<div class="mobile-header-text-box">
+        <div class="seven-mystic-intro-title" style="font-size: 1.1rem; margin-bottom: 0;">正宗泰國法術</div>
+        <div class="seven-mystic-intro-title" style="font-size: 1.1rem; margin-bottom: 0;">牌品聖物</div>
+    </div>
+
             <div class="menu-toggle" onclick="toggleMenu()">
                 <span></span>
                 <span></span>
@@ -2761,6 +2830,54 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
 
             </div> 
         </section>
+
+<section id="srv5">
+            <h2 class="no-select">靈王求願</h2>
+            
+            <div id="overlay-srv5" class="warning-overlay">
+                <div class="warning-modal">
+                    <p>本區域由於特殊關係，暫不開放，<br>若有迫切重大需求，請私訊官方LINE</p>
+                    <div class="warning-btns">
+                        <button class="warning-btn btn-skip" onclick="skipSection('srv5')">跳過本區</button>
+                        <button class="warning-btn btn-visit" onclick="dismissOverlay('srv5')">仍要參觀</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content no-select">
+                <div class="text-block">
+                    <h3 class="text-center" style="font-size: 1.8rem;">【 靈王求願 】"知你所求、應你所願"</h3>
+                    <p class="text-center" style="color: #d4af37; font-size: 1.2rem; margin-bottom: 1.5rem; letter-spacing: 2px; font-weight: bold;">—— 恭請皮烹王眾協助，破除現實枷鎖的至高力量 ——</p>
+                    
+                    <div class="img-wrapper-bordered">
+                        <img src="靈王求願.jpg" alt="靈王求願">
+                        <div class="image-caption">求願參考示意圖</div>
+                    </div><br>
+
+                    <p style="text-align: justify;">  當世俗的努力觸及天花板，當現實的困局難以單憑人力扭轉，「靈王求願」將為您勾連法界中具備至高位階的強大力量，<br>
+                        以法脈契約之名，破除枷鎖，達成心之所向。<br>「靈王求願」是七奧閣最高階的成願儀軌之一。不同於一般的加持，此法門直接勾連法界中具備權威位階的靈王，以強大的靈威介入供主的現實運勢，協助打破長期停滯的困局。這不僅是一場法事，更是一份莊嚴的法脈契約。</p>
+
+                    <div class="sub-title">▍法門核心重點</div>
+                    <ul class="info-list">
+                        <li><strong>【儀式本質】：</strong> 透過師父深厚功力與法脈連結，直接恭請皮烹王眾協助，針對善信的特定目標注入強大且直接的推動力。</li>
+                        <li><strong>【適用情況】：</strong> 適合面臨人生重大轉折、長期事業停滯、或是擁有極其強烈且急迫的具體願望（如：重大合約、大型債務化解、逆天改運等）。</li>
+                        <li><strong>【執行流程】：</strong> 此為一對一專屬法事。需提供供主詳細資訊，由師父擇吉日開壇，在皮烹王眾與法脈祖師的見證下完成這份成願契約。</li>
+                    </ul>
+                    
+                    <div class="rules-container">
+                        <h4 class="rules-header">◈ 求願需知：因果鐵律</h4>
+                        <ul class="rules-list">
+                            <li><strong>【成願機遇與因果定數】：</strong> 靈王求願具備強大的爆發推力，若順利契合，能為善信在短時間內帶來龐大機遇與所求之物。然而，法界運作皆有定數，本閣堅持正信，絕不作「百分之百必定成功」之虛假保證。</li>
+                            <li><strong>【嚴守信用與違誓代價】：</strong> 求願皆有明確的「時效性」。若於約定時限內未見成願，代表緣分或時機未到，供主無須進行任何後續處理。但若順利成願，請務必、絕對要依照當初承諾的條件與時間還願！ 皮烹王眾極度看重「信用」，若過河拆橋或刻意毀諾，必將承受來自法脈的嚴厲懲罰與反噬。</li>
+                            <li><strong>【願力相稱與因果守恆】：</strong> 法術是推力，而非無中生有。若所求之願望過於龐大，遠超自身命盤原本可負荷的極限，等同於在透支未來的福報。強行成願不僅可能需要付出高昂的代價，甚至會導致後續整體運勢劇烈下滑。萬物皆有因果，切勿盲目貪求。</li>
+                            <li><strong>【審慎評估與事前諮詢】：</strong> 為了保護善信，所有求願皆須經過嚴格的事前審估。請務必先與阿贊師父進行詳細諮詢，確認您的願望是否合理、安全，且符合自身因果的承載力，確認無虞後方可開壇求願。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div> 
+        </section>
+
+
         <section id="srv6">
             <h2 class="no-select">轉運法事</h2>
             <div class="content no-select">
