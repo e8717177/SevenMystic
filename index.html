@@ -276,21 +276,29 @@ body {
         background-position: center center !important; /* 🌟 關鍵：讓圖片絕對置中，符合您的截圖 */
     }
 
-            .nav-links {
-                position: fixed;
-                right: -100%;
-                top: 80px;
-                flex-direction: column;
-                background: rgba(0, 0, 0, 0.98);
-                width: 100%;
-                text-align: center;
-                transition: 0.3s;
-                padding: 2rem 0;
-                border-top: 2px solid #d4af37;
-                z-index: 999;
-                height: calc(100vh - 80px);
-                overflow-y: auto;
-            }
+           .nav-links {
+    position: fixed;
+    right: -100%;
+    top: 80px;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.98);
+    width: 100%;
+    text-align: center;
+    transition: 0.3s;
+    padding: 2rem 0 5rem 0; /* 底部增加 padding 確保最後一項不被遮住 */
+    border-top: 2px solid #d4af37;
+    z-index: 999;
+    
+    /* 🌟 核心修正 1：解決底部縫隙 */
+    height: calc(100dvh - 80px); 
+    height: calc(100vh - 80px); /* 備用方案 */
+    bottom: 0; 
+    
+    /* 🌟 核心修正 2：防止選單內部滑動到底後傳導給背景 */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none; 
+}
             .nav-links.active { right: 0; }
             .menu-toggle { display: flex; z-index: 1001; }
             .logo { height: 50px; }
@@ -1143,13 +1151,13 @@ body {
 }/* ==========================================================================
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
-/* 🌟 終極鎖定背景滾動 (專治 iOS 穿透) */
-/* 🌟 終極 iOS 鎖定：改用 fixed 與 100% 防止網址列縫隙 */
+/* 找到你 CSS 中的 .no-scroll 並修改如下 */
 html.no-scroll, body.no-scroll { 
     overflow: hidden !important; 
-    height: 100% !important; /* 不用 vh，避免 Safari 網址列縮放產生縫隙 */
-    position: fixed !important; /* 直接把背景釘死 */
+    height: 100% !important; 
     width: 100% !important;
+    position: fixed !important; /* 🌟 這是關鍵，防止底層被滑動 */
+    top: var(--scroll-y);       /* 🌟 配合 JS 記錄位置，防止畫面上跳 */
 }
 
 @media (max-width: 768px) {
@@ -4310,25 +4318,29 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
        1. 基礎功能 (導覽列、彈窗)
        ========================================================================== */
    /* 將原本的 toggleMenu 換成這段： */
-let scrollPosition = 0; // 🌟 務必補上這行宣告變數
+let scrollY = 0; // 記錄捲動位置
 
 function toggleMenu() {
     const navLinks = document.getElementById('navLinks');
     const isActive = navLinks.classList.contains('active');
 
     if (!isActive) {
-        // 【打開選單】記錄位置，並把 body 釘在該高度
-        scrollPosition = window.scrollY;
-        document.body.style.top = `-${scrollPosition}px`;
+        // 【打開選單】
+        scrollY = window.scrollY; // 記錄當前位置
+        document.documentElement.style.setProperty('--scroll-y', `-${scrollY}px`);
+        
         document.body.classList.add('no-scroll');
         document.documentElement.classList.add('no-scroll');
         navLinks.classList.add('active');
     } else {
-        // 【關閉選單】解除釘死，並跳回原本的捲動位置
+        // 【關閉選單】
         document.body.classList.remove('no-scroll');
         document.documentElement.classList.remove('no-scroll');
-        document.body.style.top = '';
-        window.scrollTo(0, scrollPosition);
+        
+        // 恢復捲動位置
+        const scrollTarget = parseInt(document.documentElement.style.getPropertyValue('--scroll-y') || '0') * -1;
+        window.scrollTo(0, scrollTarget);
+        
         navLinks.classList.remove('active');
     }
 }
@@ -4612,24 +4624,23 @@ function closeNotice() {
         body.style.maxHeight = isActive ? null : body.scrollHeight + "px";
     }
 
-   document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.cat-check').forEach(box => {
-            box.addEventListener('change', syncFilters);
-        });
-        
-        // 🌟 點擊選單連結時，執行「解除釘死與還原位置」的邏輯
-        document.querySelectorAll('.nav-links a').forEach(link => {
-            link.addEventListener('click', () => {
-                document.getElementById('navLinks').classList.remove('active');
-                document.body.classList.remove('no-scroll');
-                document.documentElement.classList.remove('no-scroll');
-                
-                // 🌟 關鍵修復：解除 fixed 狀態並跳回剛才滑動到的高度
-                document.body.style.top = '';
-                window.scrollTo(0, scrollPosition); 
-            });
+  document.addEventListener('DOMContentLoaded', () => {
+    // 1. 牌品專區的功效勾選監聽
+    document.querySelectorAll('.cat-check').forEach(box => {
+        box.addEventListener('change', syncFilters);
+    });
+    
+    // 2. 🌟 關鍵修復：點擊選單連結時，關閉選單並還原背景捲動位置
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', () => {
+            const navLinks = document.getElementById('navLinks');
+            // 如果選單目前是開啟狀態，就觸發一次 toggleMenu 將其關閉並解凍背景
+            if (navLinks.classList.contains('active')) {
+                toggleMenu(); 
+            }
         });
     });
+});
 /* ==========================================================================
    5. 自動彈窗監聽邏輯 (捲動到求願/降頭區時觸發)
    ========================================================================== */
