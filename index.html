@@ -876,10 +876,9 @@ body {
         }
         .modal-title { text-align: center; color: #d4af37; font-size: 2rem; letter-spacing: 5px; margin-bottom: 30px; }
         .close-modal { position: absolute; right: 25px; top: 20px; color: #d4af37; font-size: 35px; cursor: pointer; z-index: 2010; line-height: 1; }
-.gallery-tabs {
+        .gallery-tabs {
             flex-shrink: 0; border-bottom: 3px solid #d4af37; padding-bottom: 20px; margin-bottom: 20px;
             display: flex; justify-content: center; gap: 15px; width: 100%;
-            flex-wrap: wrap; /* 🌟 修正：讓手機版分類按鈕可以自動換行，不會超出螢幕 */
         }
         .gallery-tabs .tab-btn { border: 1px solid #444; border-radius: 5px; }
         .gallery-tabs .tab-btn.active, .gallery-tabs .tab-btn:hover { border-color: #d4af37; color: #f4d03f; background: rgba(212, 175, 55, 0.1); }
@@ -897,20 +896,20 @@ body {
         #items-container::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
 
 /* 牌品專區：底部固定宣告區塊 (緊湊版) */
-        .modal-footer-notice {
-            flex-shrink: 0;
-            width: 100%;
-            text-align: center;
-            color: #f4d03f;
-            font-size: 1.05rem;
-            padding-top: 5px;        
-            margin-top: 5px;         
-            margin-bottom: -20px;    
-            border-top: 3px solid rgba(212, 175, 55, 0.5); /* 🌟 修正：透明度不可為 50，改為 0.5 才會顯示金線 */
-            letter-spacing: 2px;
-            z-index: 10;
-            user-select: none;
-        }
+.modal-footer-notice {
+    flex-shrink: 0;
+    width: 100%;
+    text-align: center;
+    color: #f4d03f;
+    font-size: 1.05rem;
+    padding-top: 5px;        /* 【縮小】金線與文字的距離 (原15px -> 8px) */
+    margin-top: 5px;         /* 【縮小】上方區塊與金線的距離 (原15px -> 5px) */
+    margin-bottom: -20px;    /* 【關鍵】抵銷彈窗預設的底部30px留白，讓文字離底框近一點 */
+    border-top: 3px solid rgba(212, 175, 55, 50); /* 金線改細一點會更精緻 */
+    letter-spacing: 2px;
+    z-index: 10;
+    user-select: none;
+}
 
         /* 戒律專區手風琴 (Accordion) */
         .accordion-container { max-width: 1000px; margin: 0 auto; }
@@ -976,9 +975,6 @@ body {
 /* ==========================================================================
    10. 燈箱擴充控制面板 (翻面、換色)
    ========================================================================== */
-/* ==========================================================================
-   燈箱擴充控制面板 (翻面、換色) 與 9:16 介紹框
-   ========================================================================== */
 .lightbox-controls {
     display: flex;
     gap: 15px;
@@ -988,7 +984,6 @@ body {
     flex-wrap: wrap;
     z-index: 3005;
 }
-
 .variant-btn {
     background: rgba(0, 0, 0, 0.6);
     border: 1px solid #d4af37;
@@ -1003,120 +998,29 @@ body {
     gap: 8px;
     letter-spacing: 1px;
 }
-
 .variant-btn:hover, .variant-btn.active {
     background: #d4af37;
     color: #000;
     box-shadow: 0 0 15px rgba(212, 175, 55, 0.6);
     font-weight: bold;
 }
-
 .color-options {
     display: flex;
     gap: 10px;
     border-left: 1px solid rgba(212, 175, 55, 0.3);
     padding-left: 15px;
 }
-/* 直接用這段替換掉你原本的 .info-box-916 即可，不用在底部額外寫 Media Query */
-/* 牌品介紹框：整體容器 */
-/* 牌品介紹框 - 唯一校正版，請確保 CSS 內只有這一段，不要重複定義 */
-/* 牌品介紹框 - 唯一校正版：徹底解決大小寬度不一 */
-/* 牌品介紹框 - 最終修正版：切斷與圖片的連結，強制固定大小 */
-.info-box-916 {
-    display: none;
-    position: fixed; /* 🌟 關鍵1：改成 fixed，直接對齊螢幕，不受圖片縮放影響 */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;     /* 🌟 關鍵2：改用 vw (視圖寬度)，不要用 % */
-    max-width: 360px;
-    height: 50vh;    /* 🌟 關鍵3：強制鎖定高度 */
-    background: rgba(10, 10, 10, 0.98);
-    border: 2px solid #d4af37;
-    border-radius: 12px;
-    z-index: 3010;
-    padding: 35px 25px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 1);
-    box-sizing: border-box;
-}
 
-.info-box-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
 
-/* 標題置中與發光 */
-#info-box-title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #f4d03f;
-    text-align: center;
-    margin: 0 auto 25px auto;
-    width: 100%;
-    font-size: 1.8rem;
-    font-weight: 900;
-    letter-spacing: 4px;
-    text-indent: 4px; /* 抵銷字距偏左 */
-    text-shadow: 0 0 12px rgba(244, 208, 63, 0.7);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-    padding-bottom: 15px;
-}
-
-/* 內文滾動區域 */
-#info-box-text {
-    flex-grow: 1;
-    overflow-y: auto;
-    color: #ffffff;
-    line-height: 2.0;
-    text-align: justify;
-    font-size: 1.1rem;
-    padding-right: 10px;
-}
-
-/* 底部按鈕區域的金線 */
-.info-box-btn-area {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid rgba(212, 175, 55, 0.4);
-    text-align: center;
-}
-
-/* 返回按鈕 */
-.info-box-content .variant-btn {
-    display: inline-block;
-    background: transparent !important;
-    border: 1px solid #d4af37 !important;
-    color: #d4af37 !important;
-    width: fit-content !important;
-    min-width: 100px;
-    padding: 8px 25px !important;
-    font-size: 1.1rem;
-    border-radius: 4px !important;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.info-box-content .variant-btn:hover {
-    background: rgba(212, 175, 55, 0.1) !important;
-}
-
-/* 捲軸美化 */
-#info-box-text::-webkit-scrollbar { width: 4px; }
-#info-box-text::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 10px; }
-
-@keyframes box-glow {
-    0% { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
-    50% { border-color: #f4d03f; box-shadow: 0 0 30px rgba(212, 175, 55, 0.6); }
-    100% { border-color: #d4af37; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
-}
-}/* ==========================================================================
-   七奧閣 - Master RWD 終極整合控制中心
+/* ==========================================================================
+   七奧閣 - Master RWD 終極整合控制中心 (直向解壓縮 + 橫向防護 + 選單修復)
    ========================================================================== */
 /* 鎖定背景滾動 (防止漢堡選單滑動時看到後面) */
 body.no-scroll { overflow: hidden !important; }
 
+/* ==========================================================================
+   七奧閣 - Master RWD 終極整合控制中心
+   ========================================================================== */
 @media (max-width: 768px) {
     /* 1. 導覽列與選單 */
     .nav-links {
@@ -1128,22 +1032,23 @@ body.no-scroll { overflow: hidden !important; }
         width: 100%;
         text-align: center;
         transition: 0.3s;
-        padding: 2rem 0 5rem 0;
+        padding: 2rem 0 5rem 0; /* 增加底部空間，避免手機下方工具列遮擋 */
         border-top: 2px solid #d4af37;
         z-index: 999;
         height: calc(100vh - 80px);
         overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
+        -webkit-overflow-scrolling: touch; /* 讓 iOS 滑動更順暢不破圖 */
     }
     .nav-links.active { right: 0; }
     .menu-toggle { display: flex; z-index: 1001; }
     .logo { height: 50px; }
 
+    /* 下拉選單修復：強制對齊左側並撐滿寬度，解決偏右問題 */
     .dropdown-menu {
         position: relative;
         top: 0;
-        left: 0; 
-        width: 100%; 
+        left: 0; /* 歸零 */
+        width: 100%; /* 撐滿 */
         transform: none !important;
         background-color: transparent;
         box-shadow: none;
@@ -1193,174 +1098,19 @@ body.no-scroll { overflow: hidden !important; }
         .nav-links { top: 60px; height: calc(100vh - 60px); }
         .gallery-modal .modal-content { height: 98vh; margin: 1vh auto; padding: 10px; }
         .modal-title { font-size: 1.2rem; margin-bottom: 5px; }
+        .close-modal { top: 5px; right: 15px; }
         #lightbox img { max-height: 60vh !important; }
         .lightbox-controls { margin-top: 10px; }
         .prev-arrow, .next-arrow { transform: scaleY(1.5); margin-top: -10px; }
     }
 
-    /* 5. 基礎功能修復 & 🌟 手機版特定防護 */
+    /* 5. 基礎功能修復 */
     .video-wrapper { width: 100%; padding-bottom: 56.25%; }
     .warning-modal { padding: 1.5rem; width: 90%; }
     .gallery-modal .modal-content { width: 95%; height: 90vh; }
-    
-    /* 🌟 修正：覆蓋 ID 權重，確保牌品專區在手機上不會擠成 5 張 */
-    #items-container { 
-        padding: 10px 5px 60px 5px !important; 
-        gap: 10px !important; 
-    }
-    #items-container .gallery-item { 
-        flex: 0 0 calc((100% - 10px) / 2) !important; 
-        max-width: calc((100% - 10px) / 2) !important; 
-        margin-bottom: 15px !important; 
-    }
-    /* 🌟 修正：讓手機版的叉叉按鈕不會跑到畫面中間擋住圖片 */
-    .lightbox-close, .close-modal {
-        top: 10px !important;
-        right: 15px !important;
-        font-size: 2.5rem !important;
-    }
-    
+    #items-container { padding: 5px 5px 50px 5px; }
     .modal-footer-notice { margin-bottom: -10px; font-size: 0.95rem; }
-    .lightbox-prev, .lightbox-next { font-size: 2.5rem; padding: 10px; }
-    .lightbox-prev { left: 0; }
-    .lightbox-next { right: 0; }
-    .lightbox-content { max-width: 95vw; }
-    #lightbox img { max-height: 55vh; }
-    #lightbox-caption { font-size: 1rem; }
 }
-/* 9:16 介紹框核心樣式修正 */
-/* 9:16 介紹框核心樣式 - 最終修正版 */
-.info-box-916 {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 88%;
-    max-width: 360px;
-    aspect-ratio: 9 / 16;
-    background: rgba(10, 10, 10, 0.98);
-    border: 2px solid #d4af37;
-    border-radius: 12px;
-    z-index: 3010;
-    padding: 35px 25px;
-    box-shadow: 0 0 40px rgba(0, 0, 0, 1);
-    box-sizing: border-box;
-}
-
-.info-box-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-/* 標題：修正置中偏差與發光效果 */
-#info-box-title {
-    color: #f4d03f;
-    text-align: center;
-    margin: 0 auto 20px auto;
-    width: 100%;
-    font-size: 1.6rem; /* 稍微縮小一點點確保不破行 */
-    font-weight: 900;
-    letter-spacing: 4px;
-    /* 重要：補償字距產生的偏左問題 */
-    padding-left: 4px; 
-    text-shadow: 0 0 10px rgba(244, 208, 63, 0.6);
-    border-bottom: 1px solid rgba(212, 175, 55, 0.4);
-    padding-bottom: 15px;
-}
-
-/* 內文 */
-#info-box-text {
-    flex-grow: 1;
-    overflow-y: auto;
-    color: #ffffff;
-    line-height: 2.0;
-    text-align: justify;
-    font-size: 1.1rem;
-    padding-right: 5px;
-}
-
-/* 關鍵：在按鈕上方加上對稱的金色裝飾線 */
-.info-box-content .variant-btn {
-    display: block;
-    background: transparent !important;
-    border: 1px solid #d4af37 !important;
-    color: #d4af37 !important;
-    width: fit-content !important;
-    min-width: 100px;
-    margin: 20px auto 0 !important; /* 置中 */
-    padding: 8px 20px !important;
-    font-size: 1.1rem;
-    border-radius: 4px !important;
-    cursor: pointer;
-    
-    /* 建立按鈕上方的金線 */
-    position: relative;
-    border-top: none; /* 先移除原本按鈕的上邊框，改用偽元素做長線 */
-}
-
-/* 按鈕上方那條跟標題下方一樣長的金線 */
-/* 🌟 完美的底部容器：滿版金線、精準的上下黑色留白 */
-.info-box-footer {
-    width: 100%;
-    margin-top: 20px;  /* 線條與上方內文的黑色距離 */
-    padding-top: 20px; /* 線條與下方按鈕的黑色距離 */
-    border-top: 1px solid rgba(212, 175, 55, 0.4); /* 對稱的頂部滿版金線 */
-    text-align: center;
-    flex-shrink: 0;    /* 確保這塊區域不會被長文字擠壓變形 */
-}
-
-/* 🌟 乾淨的按鈕本體，不再帶有奇奇怪怪的線條 */
-.info-box-content .variant-btn {
-    display: inline-block !important; 
-    background: transparent !important;
-    border: 1px solid #d4af37 !important;
-    color: #d4af37 !important;
-    width: fit-content !important;
-    min-width: 100px;
-    margin: 0 auto !important; 
-    padding: 8px 25px !important;
-    font-size: 1.1rem;
-    border-radius: 4px !important;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.info-box-content .variant-btn:hover {
-    background: rgba(212, 175, 55, 0.1) !important;
-}
-
-.info-box-content .variant-btn:hover {
-    background: rgba(212, 175, 55, 0.1) !important;
-}
-
-/* 隱藏捲軸 */
-#info-box-text::-webkit-scrollbar {
-    width: 0px;
-}#info-box-text::-webkit-scrollbar-thumb {
-    background: #d4af37;
-    border-radius: 10px;
-}
-
-/* 關閉按鈕樣式加強 */
-.info-box-content .variant-btn {
-    background: transparent;
-    border: 1px solid #d4af37;
-    margin-top: 20px;
-    width: 100%;
-    padding: 12px 0;
-    font-weight: bold;
-    color: #d4af37;
-    transition: 0.3s;
-}
-
-.info-box-content .variant-btn:hover {
-    background: #d4af37;
-    color: #000;
-}
-
-
     </style>
 </head>
 <body>
@@ -3123,69 +2873,236 @@ body.no-scroll { overflow: hidden !important; }
     <span class="lightbox-close">&times;</span>
     <span class="lightbox-prev" onclick="changeImage(-1, event)">&#10094;</span>
     <div class="lightbox-content">
+        
         <div id="lightbox-media-container" style="width: 100%; display: flex; justify-content: center;">
             <img id="lightbox-img" src="" alt="放大影像">
             <div id="lightbox-video-wrapper" class="video-wrapper" style="display: none; width: 100%;"></div>
         </div>
-
+        
         <div id="lightbox-controls" class="lightbox-controls" onclick="event.stopPropagation()">
             <button id="btn-flip" class="variant-btn" onclick="toggleFlip(event)" style="display: none;">🔄 看背面</button>
-            <button id="btn-info" class="variant-btn" onclick="toggleInfo(event)" style="display: none;">📖 看介紹</button>
             <div id="color-options" class="color-options"></div>
         </div>
 
         <p id="lightbox-caption"></p> 
-
-       <div id="lightbox-info-box" class="info-box-916" onclick="event.stopPropagation()">
-            <div class="info-box-content">
-                <h3 id="info-box-title">詳細介紹</h3>
-                
-                <div id="info-box-text"></div>
-                
-                <div class="info-box-footer">
-                    <button class="variant-btn" onclick="toggleInfo(event)">返回</button>
-                </div>
-            </div>
-        </div>
     </div>
     <span class="lightbox-next" onclick="changeImage(1, event)">&#10095;</span>
 </div>
 
-<div id="item-gallery-modal" class="gallery-modal no-select">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeItemGallery()">&times;</span>
-        <h2 class="modal-title">牌品專區</h2>
-        
-        <div class="gallery-tabs">
-            <button class="tab-btn active" onclick="filterItems('all', event)">全部</button>
-            <button class="tab-btn" onclick="filterItems('orthodox', event)">正牌</button>
-            <button class="tab-btn" onclick="filterItems('yin', event)">陰牌</button>
-            <button class="tab-btn" onclick="filterItems('amulet', event)">聖物</button>
-            <button class="tab-btn" onclick="filterItems('statue', event)">供尊</button>
-        </div>
 
-<div class="gallery-grid" id="items-container">
-            <div class="gallery-item yin" onclick="openGallery(this)" 
-                 data-src="馬什能正面.jpg" 
-                 data-colors="換色:馬什能正面1.jpg" 
-                 data-back="馬什能反面.jpg" 
-                 data-colors-back="換色:馬什能反面1.jpg" 
-                 data-desc="陰牌 - 馬什能" 
-                 data-info="【 鎖心魅惑 ‧ 奪回愛情的絕對主導權 】<br>情感不順嗎？心儀對象總是對你忽冷忽熱嗎？<br><br>明明付出了一切，卻始終走不進對方的心理？<br>曾經熱絡的感情，不知從何時開始變得冷淡疏離？<br>你在這段關係中，是否已經卑微到快要失去自己？<br><br>別再原地等待奇蹟，你需要的是能徹底翻轉磁場的力量。<br><br>🌿 人緣法脈 — 阿贊有達邦【蛇尼蛤 ‧ 馬什能】<br>「馬什能」在古老法門中，代表著不可抗拒的吸引力與極致的纏綿鎖心。由阿贊有達邦大師親自加持，將深奧的人緣法脈注入其中，專為解決現代人的情感焦慮而生。<br><br>這不僅是一件聖物，更是你磁場的「強效催化劑」。<br><br>✨ 三大核心加持方向：<br>【極致桃花 ‧ 魅力全開】<br>散發由內而外的吸引力，讓你成為人群中的焦點。不論是單戀告白還是擴展交友圈，都能讓對方對你產生強烈好感。<br><br>【強力鎖心 ‧ 挽回升溫】<br>針對忽冷忽熱、關係降溫的伴侶。讓對方的思緒被你牽動，重拾熱戀時的悸動，讓他的眼裡只有你。<br><br>【貴人環繞 ‧ 人緣滿分】<br>除了男女情感，更全面提升職場與社交的人緣。化解小人敵意，讓主管、客戶對你更有信任感。<br><br>🛑 掌握幸福，不再被動受挫<br>如果你渴望轉變現狀，渴望被愛、被在乎、被重視，那麼這尊來自「阿贊有達邦」的馬什能，將是你最強大的後盾。<br><br>📩 【立即私訊】 了解聖物細節，開啟你的魅力新篇章。">
-                <img src="馬什能正面.jpg">
-                <div class="gallery-overlay"><span>馬什能</span></div>
+    <div id="item-gallery-modal" class="gallery-modal no-select">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeItemGallery()">&times;</span>
+            <h2 class="modal-title">牌品專區</h2>
+            
+            <div class="gallery-tabs">
+                <button class="tab-btn active" onclick="filterItems('all', event)">全部</button>
+                <button class="tab-btn" onclick="filterItems('orthodox', event)">正牌</button>
+                <button class="tab-btn" onclick="filterItems('yin', event)">陰牌</button>
+                <button class="tab-btn" onclick="filterItems('amulet', event)">聖物</button>
+                <button class="tab-btn" onclick="filterItems('statue', event)">供尊</button>
             </div>
 
-            <div class="gallery-item amulet" onclick="openGallery(this)" 
-                 data-src="鯊魚魂魄勇正面.jpg" 
-                 data-back="鯊魚魂魄勇反面.jpg" 
-                 data-desc="聖物 - 鯊魚魂魄勇" 
-                 data-info="🦈 泰東北祖師級 — 阿贊婆屬<br>來自泰東北傳奇法脈，由祖師級名師阿贊婆屬親自督造。<br>鯊魚是海中的絕對霸主，嗅覺靈敏、咬住獵物絕不鬆口。這尊「鯊魚魂魄蛹」融合了鯊魚法脈的悍勇精神與魂魄蛹的守護力量，專為「奪財」與「擋災」而生。<br><br>🔥 十種強悍招財法門 ‧ 全方位招財：<br>【剛猛招財】：如鯊魚獵食般精準，為你嗅吸財富先機，主動出擊抓取財利。<br><br>【事業突破】：橫掃事業上的障礙，讓你在競爭中脫穎而出，業績翻倍。<br><br>【生意興隆】：吸引客源、穩固客群，讓生意重回巔峰。<br><br>【避險擋災】：強大的守護力量，自動為你擋下意外與突發性的災厄。<br><br>【絕不漏財】：像鯊魚緊咬獵物一樣，鎖住財庫，減少不必要的開支。<br><br>【絕處逢生】：在最困頓的時刻，為你開闢一條生財之路。<br><br>🌊 成為贏家，從此不再受困。<br>別讓平庸的運勢限制了你的野心。如果你正處於事業的低谷，或渴望在財富路上更進一步，阿贊婆屬的「鯊魚魂魄蛹」將是你最兇猛的開路先鋒。<br><br>📩 【立即私訊】 恭請祖師級法脈力量，讓財富主動找上門。<br>( 祖師法脈，數量極稀有 )">
-                <img src="鯊魚魂魄勇正面.jpg">
-                <div class="gallery-overlay"><span>鯊魚魂魄蛹</span></div>
-            </div>
+            <div class="gallery-grid" id="items-container">
+    <div class="gallery-item orthodox" onclick="openGallery(this)" 
+         data-src="正牌1.jpg" 
+         data-colors="金殼:正牌1_金.jpg, 銀殼:正牌1_銀.jpg" 
+         data-back="正牌1_背面.jpg" 
+         data-colors-back="" 
+         data-desc="正法聖物 01">
+        <img src="正牌1.jpg">
+        <div class="gallery-overlay"><span>正法聖物 01</span></div>
+    </div>
+    
+    <div class="gallery-item orthodox" onclick="openGallery(this)" 
+         data-src="正牌2.jpg" 
+         data-colors="金殼:正牌2_金.jpg, 銀殼:正牌2_銀.jpg" 
+         data-back="正牌2_背面.jpg" 
+         data-colors-back="" 
+         data-desc="正法聖物 02">
+        <img src="正牌2.jpg">
+        <div class="gallery-overlay"><span>正法聖物 02</span></div>
+    </div>
+    
+    <div class="gallery-item orthodox" onclick="openGallery(this)" 
+         data-src="正牌3.jpg" 
+         data-colors="金殼:正牌3_金.jpg, 銀殼:正牌3_銀.jpg" 
+         data-back="正牌3_背面.jpg" 
+         data-colors-back="" 
+         data-desc="正法聖物 03">
+        <img src="正牌3.jpg">
+        <div class="gallery-overlay"><span>正法聖物 03</span></div>
+    </div>
+    
+    <div class="gallery-item orthodox" onclick="openGallery(this)" 
+         data-src="正牌4.jpg" 
+         data-colors="金殼:正牌4_金.jpg, 銀殼:正牌4_銀.jpg" 
+         data-back="正牌4_背面.jpg" 
+         data-colors-back="" 
+         data-desc="正法聖物 04">
+        <img src="正牌4.jpg">
+        <div class="gallery-overlay"><span>正法聖物 04</span></div>
+    </div>
+    
+    <div class="gallery-item orthodox" onclick="openGallery(this)" 
+         data-src="正牌5.jpg" 
+         data-colors="金殼:正牌5_金.jpg, 銀殼:正牌5_銀.jpg" 
+         data-back="正牌5_背面.jpg" 
+         data-colors-back="" 
+         data-desc="正法聖物 05">
+        <img src="正牌5.jpg">
+        <div class="gallery-overlay"><span>正法聖物 05</span></div>
+    </div>
 
-        </div>
+    <div class="gallery-item yin" onclick="openGallery(this)" 
+         data-src="馬什能正面.jpg" 
+         data-colors="換色:馬什能正面1.jpg" 
+         data-back="馬什能反面.jpg" 
+         data-colors-back="換色:馬什能反面1.jpg"  
+         data-desc="靈威陰牌 - 馬什能">
+        <img src="馬什能正面.jpg">
+        <div class="gallery-overlay"><span>馬什能</span></div>
+    </div>
+    
+    <div class="gallery-item yin" onclick="openGallery(this)" 
+         data-src="復仇烏鴉正面.jpg" 
+         data-colors="" 
+         data-back="復仇烏鴉反面.jpg" 
+         data-colors-back="" 
+         data-desc="靈威陰牌 - 復仇烏鴉">
+        <img src="復仇烏鴉正面.jpg">
+        <div class="gallery-overlay"><span>復仇烏鴉</span></div>
+    </div>
+    
+    <div class="gallery-item yin" onclick="openGallery(this)" 
+         data-src="大皮烹正面.jpg" 
+         data-colors="" 
+         data-back="大皮烹反面.jpg" 
+         data-colors-back="" 
+         data-desc="靈威陰牌 - 大皮烹">
+        <img src="大皮烹正面.jpg">
+        <div class="gallery-overlay"><span>大皮烹</span></div>
+    </div>
+    
+    <div class="gallery-item yin" onclick="openGallery(this)" 
+         data-src="財情女靈正面.jpg" 
+         data-colors="" 
+         data-back="財情女靈反面.jpg" 
+         data-colors-back="" 
+         data-desc="靈威陰牌 - 財情女靈">
+        <img src="財情女靈正面.jpg">
+        <div class="gallery-overlay"><span>財情女靈</span></div>
+    </div>
+
+    <div class="gallery-item yin" onclick="openGallery(this)" 
+         data-src="陰牌5.jpg" 
+         data-colors="" 
+         data-back="陰牌5_背面.jpg" 
+         data-colors-back="" 
+         data-desc="靈威陰牌 05">
+        <img src="陰牌5.jpg">
+        <div class="gallery-overlay"><span>靈威陰牌 05</span></div>
+    </div>
+
+    <div class="gallery-item amulet" onclick="openGallery(this)" 
+         data-src="聖物1.jpg" 
+         data-colors="原色:聖物1.jpg, 鍍金:聖物1_金.jpg" 
+         data-back="聖物1_背面.jpg" 
+         data-colors-back="" 
+         data-desc="法脈聖物 01">
+        <img src="聖物1.jpg">
+        <div class="gallery-overlay"><span>法脈聖物 01</span></div>
+    </div>
+    
+    <div class="gallery-item amulet" onclick="openGallery(this)" 
+         data-src="聖物2.jpg" 
+         data-colors="原色:聖物2.jpg, 鍍金:聖物2_金.jpg" 
+         data-back="聖物2_背面.jpg" 
+         data-colors-back="" 
+         data-desc="法脈聖物 02">
+        <img src="聖物2.jpg">
+        <div class="gallery-overlay"><span>法脈聖物 02</span></div>
+    </div>
+    
+    <div class="gallery-item amulet" onclick="openGallery(this)" 
+         data-src="聖物3.jpg" 
+         data-colors="原色:聖物3.jpg, 鍍金:聖物3_金.jpg" 
+         data-back="聖物3_背面.jpg" 
+         data-colors-back="" 
+         data-desc="法脈聖物 03">
+        <img src="聖物3.jpg">
+        <div class="gallery-overlay"><span>法脈聖物 03</span></div>
+    </div>
+    
+    <div class="gallery-item amulet" onclick="openGallery(this)" 
+         data-src="聖物4.jpg" 
+         data-colors="原色:聖物4.jpg, 鍍金:聖物4_金.jpg" 
+         data-back="聖物4_背面.jpg" 
+         data-colors-back="" 
+         data-desc="法脈聖物 04">
+        <img src="聖物4.jpg">
+        <div class="gallery-overlay"><span>法脈聖物 04</span></div>
+    </div>
+    
+    <div class="gallery-item amulet" onclick="openGallery(this)" 
+         data-src="聖物5.jpg" 
+         data-colors="原色:聖物5.jpg, 鍍金:聖物5_金.jpg" 
+         data-back="聖物5_背面.jpg" 
+         data-colors-back="" 
+         data-desc="法脈聖物 05">
+        <img src="聖物5.jpg">
+        <div class="gallery-overlay"><span>法脈聖物 05</span></div>
+    </div>
+
+    <div class="gallery-item statue" onclick="openGallery(this)" 
+         data-src="供尊1.jpg" 
+         data-colors="彩繪版:供尊1_彩.jpg, 貼金版:供尊1_金.jpg" 
+         data-back="供尊1_背面.jpg" 
+         data-colors-back="" 
+         data-desc="莊嚴供尊 01">
+        <img src="供尊1.jpg">
+        <div class="gallery-overlay"><span>莊嚴供尊 01</span></div>
+    </div>
+    
+    <div class="gallery-item statue" onclick="openGallery(this)" 
+         data-src="供尊2.jpg" 
+         data-colors="彩繪版:供尊2_彩.jpg, 貼金版:供尊2_金.jpg" 
+         data-back="供尊2_背面.jpg" 
+         data-colors-back="" 
+         data-desc="莊嚴供尊 02">
+        <img src="供尊2.jpg">
+        <div class="gallery-overlay"><span>莊嚴供尊 02</span></div>
+    </div>
+    
+    <div class="gallery-item statue" onclick="openGallery(this)" 
+         data-src="供尊3.jpg" 
+         data-colors="彩繪版:供尊3_彩.jpg, 貼金版:供尊3_金.jpg" 
+         data-back="供尊3_背面.jpg" 
+         data-colors-back="" 
+         data-desc="莊嚴供尊 03">
+        <img src="供尊3.jpg">
+        <div class="gallery-overlay"><span>莊嚴供尊 03</span></div>
+    </div>
+    
+    <div class="gallery-item statue" onclick="openGallery(this)" 
+         data-src="供尊4.jpg" 
+         data-colors="彩繪版:供尊4_彩.jpg, 貼金版:供尊4_金.jpg" 
+         data-back="供尊4_背面.jpg" 
+         data-colors-back="" 
+         data-desc="莊嚴供尊 04">
+        <img src="供尊4.jpg">
+        <div class="gallery-overlay"><span>莊嚴供尊 04</span></div>
+    </div>
+    
+    <div class="gallery-item statue" onclick="openGallery(this)" 
+         data-src="供尊5.jpg" 
+         data-colors="彩繪版:供尊5_彩.jpg, 貼金版:供尊5_金.jpg" 
+         data-back="供尊5_背面.jpg" 
+         data-colors-back="" 
+         data-desc="莊嚴供尊 05">
+        <img src="供尊5.jpg">
+        <div class="gallery-overlay"><span>莊嚴供尊 05</span></div>
+    </div>
 
 </div> <div class="modal-footer-notice">
             並非每項都有現貨，請先詢問
@@ -3193,14 +3110,6 @@ body.no-scroll { overflow: hidden !important; }
 
 </div>
 <script>
-
-function toggleInfo(event) {
-    if(event) event.stopPropagation();
-    const infoBox = document.getElementById('lightbox-info-box');
-    const isVisible = infoBox.style.display === 'block';
-    infoBox.style.display = isVisible ? 'none' : 'block';
-}
-
     // 1. 漢堡選單邏輯 (包含選單開關與背景鎖定)
     document.addEventListener('DOMContentLoaded', function() {
         const menuToggle = document.querySelector('.menu-toggle');
@@ -3294,7 +3203,6 @@ function toggleInfo(event) {
     }
 
     // 4. 燈箱與藝廊邏輯
-    // 4. 燈箱與藝廊邏輯
     let currentGalleryImages = [];
     let currentImageIndex = 0;
     let currentItemState = { face: 'front', frontColorIndex: -1, backColorIndex: -1 };
@@ -3311,7 +3219,7 @@ function toggleInfo(event) {
                 fColorsStr.split(',').forEach(c => {
                     const parts = c.split(':');
                     const imgSrc = parts.length === 2 ? parts[1].trim() : parts[0].trim();
-                    if (imgSrc !== '') fColors.push({ name: parts[0].trim(), src: imgSrc });
+                    if (imgSrc !== '') fColors.push({ name: '換色', src: imgSrc });
                 });
             }
             let bColors = [];
@@ -3320,18 +3228,15 @@ function toggleInfo(event) {
                 bColorsStr.split(',').forEach(c => {
                     const parts = c.split(':');
                     const imgSrc = parts.length === 2 ? parts[1].trim() : parts[0].trim();
-                    if (imgSrc !== '') bColors.push({ name: parts[0].trim(), src: imgSrc });
+                    if (imgSrc !== '') bColors.push({ name: '換色', src: imgSrc });
                 });
             }
-            
-            // 🌟 修正：統一使用 data-src，並確保資料正確抓取
             currentGalleryImages.push({
-                front: item.getAttribute('data-src'), 
+                front: item.getAttribute('data-front') || item.getAttribute('data-src'),
                 back: item.getAttribute('data-back'),
                 frontColors: fColors,
                 backColors: bColors,
                 desc: item.getAttribute('data-desc'),
-                info: item.getAttribute('data-info'), 
                 isVideo: item.classList.contains('video-item')
             });
             if (item === element) { currentImageIndex = index; }
@@ -3356,23 +3261,6 @@ function toggleInfo(event) {
 
         captionEl.innerHTML = currentData.desc;
 
-// 處理介紹按鈕顯示邏輯
-const btnInfo = document.getElementById('btn-info');
-const infoBox = document.getElementById('lightbox-info-box');
-const infoText = document.getElementById('info-box-text');
-
-// 每次切換圖片時，先關閉介紹框
-infoBox.style.display = 'none';
-
-// 檢查是否有介紹文字 (我們假設介紹文字放在 data-info 屬性)
-// 您需要在 gallery-item 加上 data-info="您的文字"
-// 在 updateLightboxView 函數內
-if (currentData.info && currentData.info.trim() !== "") {
-    btnInfo.style.display = 'inline-flex';
-    infoText.innerHTML = currentData.info; 
-} else {
-    btnInfo.style.display = 'none';
-}
         if (currentData.isVideo) {
             imgEl.style.display = 'none';
             videoWrapper.style.display = 'block';
