@@ -256,6 +256,22 @@ body {
         }
 
         @media (max-width: 768px) {
+
+.slide-layer {
+        background-size: contain !important; /* 確保完整顯示，不裁切 */
+        background-position: top center !important; /* 靠上置中 */
+    }
+    
+    .hero {
+        min-height: 50vh !important; /* 縮小輪播區塊的高度，避免下方一大片黑 */
+        padding-top: 80px !important; 
+    }
+    
+    .slider-container {
+        top: 80px !important;
+        height: calc(100% - 80px) !important;
+    }
+
             .nav-links {
                 position: fixed;
                 right: -100%;
@@ -1124,7 +1140,10 @@ body {
    七奧閣 - Master RWD 終極整合控制中心
    ========================================================================== */
 /* 鎖定背景滾動 (防止漢堡選單滑動時看到後面) */
-body.no-scroll { overflow: hidden !important; }
+body.no-scroll { 
+    overflow: hidden !important; 
+    touch-action: none; /* 🌟 新增：禁止觸控滑動行為 */
+}
 
 @media (max-width: 768px) {
     /* 1. 導覽列與選單 */
@@ -1144,9 +1163,12 @@ body.no-scroll { overflow: hidden !important; }
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
     }
-    .nav-links.active { right: 0; }
-    .menu-toggle { display: flex; z-index: 1001; }
-    .logo { height: 50px; }
+@media (max-width: 768px) {
+    .nav-links.active { 
+        right: 0; 
+        overscroll-behavior: none; /* 🌟 新增：防止滾動穿透到底層 */
+    }
+}
 
     .dropdown-menu {
         position: relative;
@@ -1759,6 +1781,7 @@ font-size: 0.95rem !important;   /* 🌟 修改這裡：縮小字體 (原本是 
     }
 
     /* 4. 分類按鈕區：緊湊一排，平均分配欄寬 */
+/* 找到手機版這段，加上 margin-left: 0 !important; */
     .category-btn-zone {
         display: flex !important;
         justify-content: space-between !important;
@@ -1766,6 +1789,7 @@ font-size: 0.95rem !important;   /* 🌟 修改這裡：縮小字體 (原本是 
         border-top: none !important;
         padding-top: 0 !important;
         margin-top: 0 !important;
+        margin-left: 0 !important; /* 🌟 新增這行，把電腦版的 50px 歸零 */
         gap: 4px !important;
     }
 
@@ -2040,8 +2064,9 @@ margin-bottom: -10px !important; /* 🌟 加上這行：控制上下排的距離
         <div class="slide-layer" style="background-image: url('./主圖3.jpg');"></div>
         <div class="slide-layer" style="background-image: url('./主圖4.jpg');"></div>
 
-        <a class="prev-arrow no-select" style="z-index: 10;">&#10094;</a>
-        <a class="next-arrow no-select" style="z-index: 10;">&#10095;</a>
+        <a class="prev-arrow no-select" style="z-index: 10;" onclick="changeSlide(-1)">&#10094;</a>
+        <a class="next-arrow no-select" style="z-index: 10;" onclick="changeSlide(1)">&#10095;</a>
+        
         <div class="hero-bottom-frame"></div>
     </div>
 </section>
@@ -4543,13 +4568,30 @@ function closeNotice() {
         } 
     }
 
-    /* ==========================================================================
+/* ==========================================================================
        4. 其他組件 (輪播、FAQ、觀察器)
        ========================================================================== */
     const slides = document.querySelectorAll('.slide-layer');
     let currentHeroIndex = 0;
-    function goNextSlide() { if(slides.length){ currentHeroIndex = (currentHeroIndex + 1) % slides.length; slides.forEach((s,i) => s.classList.toggle('active', i === currentHeroIndex)); } }
-    setInterval(goNextSlide, 5000);
+    let heroTimer; // 🌟 新增：用於管理自動播放的計時器
+
+    function goNextSlide() { 
+        if(slides.length){ 
+            currentHeroIndex = (currentHeroIndex + 1) % slides.length; 
+            slides.forEach((s,i) => s.classList.toggle('active', i === currentHeroIndex)); 
+        } 
+    }
+
+    // 🌟 啟動五秒自動播放
+    if(slides.length > 0) heroTimer = setInterval(goNextSlide, 5000);
+
+    // 🌟 新增手動切換函數：搭配 HTML 的 onclick 事件
+    function changeSlide(step) {
+        clearInterval(heroTimer); // 先清除計時器，避免剛手動點完又馬上自動跳下一張
+        currentHeroIndex = (currentHeroIndex + step + slides.length) % slides.length;
+        slides.forEach((s,i) => s.classList.toggle('active', i === currentHeroIndex));
+        heroTimer = setInterval(goNextSlide, 5000); // 重新啟動五秒計時
+    }
 
     function toggleAccordion(button) {
         const item = button.parentElement;
