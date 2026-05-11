@@ -377,13 +377,12 @@ overflow-x: hidden; /* 🌟 加入這行 */
     }
 }
 
-/* 手機與電腦通用：點擊瞬間變白 + 縮小（這才有動畫感） */
+/* 修改為這段 */
+/* 替換為這段 */
 .prev-arrow:active, .next-arrow:active {
-    color: white !important;
-    /* 加入 scale(0.85) 讓按鈕有被按下去的感覺 */
-    /* 必須加上 translateY(-50%) 否則按鈕會跑位 */
-    transform: translateY(-50%) scale(0.85) !important;
-    transition: 0.1s !important;
+    color: #ffffff !important; 
+    transform: scaleY(3) !important; /* 🌟 拿掉 translateY(-50%) 就不會往上跳了！ */
+    transition: color 0.1s ease !important; 
 }
 
 /* 保留你原本的底框樣式 */
@@ -2048,7 +2047,7 @@ padding-right: 25px !important;
     /* 直接引用你 chapter-header h1 的金色漸層與發光特效 */
     .mobile-header-text-box span {
         color: #f4d03f !important;
-        font-size: 0.9rem !important; /* 適合手機標頭的大小 */
+        font-size: 1.15rem !important; /* 適合手機標頭的大小 */
         font-weight: 900 !important;
         letter-spacing: 2px !important;
         line-height: 1.2 !important;
@@ -2088,6 +2087,25 @@ padding-right: 25px !important;
         border: none !important;
     }
 
+/* --- 終極暴力修正：徹底消除所有框線 --- */
+.hero, .slider-container, .slide-layer, .hero-image-wrapper {
+    border: 0 !important;
+    border-width: 0 !important;
+    border-style: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+    background-color: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* 針對首頁特定區塊的額外清理 */
+#home.hero {
+    border: none !important;
+    box-shadow: none !important;
+}
+
+
 </style>
 </head>
 <body>
@@ -2096,8 +2114,8 @@ padding-right: 25px !important;
             <img src="門面.png" alt="七奧閣" class="logo">
 
 <div class="mobile-header-text-box">
-    <span>泰國正宗法術</span>
-    <span>牌品聖物</span>
+    <span>正宗泰國法脈</span>
+    <span>法事牌品</span>
 </div>
 
             <div class="menu-toggle" onclick="toggleMenu()">
